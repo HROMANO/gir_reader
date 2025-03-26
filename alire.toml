@@ -1,0 +1,16 @@
+name = "gir_reader"
+description = "A GIR file reader"
+version = "0.1.0-dev"
+
+authors = ["H. ROMANO"]
+maintainers = ["H. ROMANO <shuihuzhuan@free.fr>"]
+maintainers-logins = ["HROMANO"]
+licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
+website = "https://github.com/HROMANO"
+tags = ["gir", "gtk"]
+
+[[depends-on]]
+xmlada = "^25.0.0"
+
+[[depends-on]]
+intl = "^1.0.1"

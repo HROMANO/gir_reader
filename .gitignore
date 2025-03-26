@@ -1,7 +1,22 @@
+/obj/
+/lib/
+/alire/
+/config/
+
+
+/examples/obj/
+/examples/bin/
+/examples/alire/
+/examples/config/
+
+.#*#
+
+
 # ---> Ada
 # Object file
 *.o
 
 # Ada Library Information
 *.ali
+
 
