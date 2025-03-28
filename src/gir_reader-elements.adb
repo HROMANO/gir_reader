@@ -247,6 +247,21 @@ package body Gir_Reader.Elements is
      (Self : Element; Item : Gir_Reader.Keys.Boolean_Key) return Boolean
    is (Boolean_Data (Internal_Get (Self, Item)).Value);
 
+   -----------------
+   -- Get_Or_Else --
+   -----------------
+
+   function Get_Or_Else
+     (Self : Element; Item : Gir_Reader.Keys.Boolean_Key; Default : Boolean)
+      return Boolean is
+   begin
+      if Self.Contains (Item) then
+         return Self.Get (Item);
+      else
+         return Default;
+      end if;
+   end Get_Or_Else;
+
    ---------
    -- Get --
    ---------
@@ -256,6 +271,22 @@ package body Gir_Reader.Elements is
       return Parameter_Direction
    is (Parameter_Direction_Data (Internal_Get (Self, Item)).Value);
 
+   -----------------
+   -- Get_Or_Else --
+   -----------------
+
+   function Get_Or_Else
+     (Self    : Element;
+      Item    : Gir_Reader.Keys.Parameter_Direction_Key;
+      Default : Parameter_Direction) return Parameter_Direction is
+   begin
+      if Self.Contains (Item) then
+         return Self.Get (Item);
+      else
+         return Default;
+      end if;
+   end Get_Or_Else;
+
    ---------
    -- Get --
    ---------
@@ -263,6 +294,15 @@ package body Gir_Reader.Elements is
    function Get
      (Self : Element; Item : Gir_Reader.Keys.Integer_Key) return Integer
    is (Integer_Data (Internal_Get (Self, Item)).Value);
+
+   -----------------
+   -- Get_Or_Else --
+   -----------------
+
+   function Get_Or_Else
+     (Self : Element; Item : Gir_Reader.Keys.Integer_Key; Default : Integer)
+      return Integer
+   is (if Self.Contains (Item) then Self.Get (Item) else Default);
 
    ---------
    -- Get --
@@ -273,6 +313,16 @@ package body Gir_Reader.Elements is
       return Lifetime_Scope
    is (Lifetime_Scope_Data (Internal_Get (Self, Item)).Value);
 
+   -----------------
+   -- Get_Or_Else --
+   -----------------
+
+   function Get_Or_Else
+     (Self    : Element;
+      Item    : Gir_Reader.Keys.Lifetime_Scope_Key;
+      Default : Lifetime_Scope) return Lifetime_Scope
+   is (if Self.Contains (Item) then Self.Get (Item) else Default);
+
    ---------
    -- Get --
    ---------
@@ -280,6 +330,16 @@ package body Gir_Reader.Elements is
    function Get
      (Self : Element; Item : Gir_Reader.Keys.Ownership_Key) return Ownership
    is (Ownership_Data (Internal_Get (Self, Item)).Value);
+
+   -----------------
+   -- Get_Or_Else --
+   -----------------
+
+   function Get_Or_Else
+     (Self    : Element;
+      Item    : Gir_Reader.Keys.Ownership_Key;
+      Default : Ownership) return Ownership
+   is (if Self.Contains (Item) then Self.Get (Item) else Default);
 
    ---------
    -- Get --
@@ -290,12 +350,31 @@ package body Gir_Reader.Elements is
       return Signal_Emission
    is (Signal_Emission_Data (Internal_Get (Self, Item)).Value);
 
+   -----------------
+   -- Get_Or_Else --
+   -----------------
+
+   function Get_Or_Else
+     (Self    : Element;
+      Item    : Gir_Reader.Keys.Signal_Emission_Key;
+      Default : Signal_Emission) return Signal_Emission
+   is (if Self.Contains (Item) then Self.Get (Item) else Default);
+
    ---------
    -- Get --
    ---------
 
    function Get (Self : Element; Item : Gir_Reader.Keys.Text_Key) return Text
    is (Text_Data (Internal_Get (Self, Item)).Value);
+
+   -----------------
+   -- Get_Or_Else --
+   -----------------
+
+   function Get_Or_Else
+     (Self : Element; Item : Gir_Reader.Keys.Text_Key; Default : Text)
+      return Text
+   is (if Self.Contains (Item) then Self.Get (Item) else Default);
 
    ---------
    -- Get --
@@ -305,6 +384,17 @@ package body Gir_Reader.Elements is
      (Self : Element; Item : Gir_Reader.Keys.Element_Key)
       return Gir_Reader.Element_Lists.List
    is (Vector_Data (Internal_Get (Self, Item)).Value);
+
+   -----------------
+   -- Get_Or_Else --
+   -----------------
+
+   function Get_Or_Else
+     (Self    : Element;
+      Item    : Gir_Reader.Keys.Element_Key;
+      Default : Gir_Reader.Element_Lists.List)
+      return Gir_Reader.Element_Lists.List
+   is (if Self.Contains (Item) then Self.Get (Item) else Default);
 
    ------------------
    -- Internal_Set --
