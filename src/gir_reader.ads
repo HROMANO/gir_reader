@@ -17,6 +17,8 @@ with Ada.Text_IO;
 
 with Intl;
 
+private with Ada.Containers.Indefinite_Holders;
+
 package Gir_Reader is
 
    --  Needed for child packages Keys and Readers.
@@ -151,5 +153,19 @@ package Gir_Reader is
    --  is missing. Users shall use Gir_Reader.Elements.Contains or
    --  Gir_Reader.Elements.Get_Keys to avoid this exception.
    Key_Error : exception;
+
+private
+
+   --  Indefinite_Holders are used to hide implementation details to
+   --  child packages as we don't want to guarantee the stability of those.
+
+   --  @private The 'Holder_Content_Root' type is used to instanciate the
+   --  'Holders' package.
+   type Holder_Content_Root is interface;
+
+   --  @private Internal use only.
+   package Holders is new
+     Ada.Containers.Indefinite_Holders
+       (Element_Type => Holder_Content_Root'Class);
 
 end Gir_Reader;

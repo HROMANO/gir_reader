@@ -10,12 +10,9 @@ package body Gir_Reader.Element_Lists is
        (Index_Type   => Positive,
         Element_Type => Gir_Reader.Elements.Element);
 
-   subtype Vector is Element_Vectors.Vector;
-
    --  The real list hidden by the holder.
-   type Real_Element_List is new Root with record
-      Value : Vector;
-   end record;
+   type Real_Element_List is new Element_Vectors.Vector and Holder_Content_Root
+   with null record;
 
    ----------------
    -- Empty_List --
@@ -31,13 +28,14 @@ package body Gir_Reader.Element_Lists is
    --  Is_Empty  --
    ----------------
 
+   overriding
    function Is_Empty (Self : List) return Boolean is
    begin
-      if Self.Internal.Is_Empty then
+      if Holders.Holder (Self).Is_Empty then
          return True;
       end if;
 
-      return Real_Element_List (Self.Internal.Element).Value.Is_Empty;
+      return Real_Element_List (Self.Element).Is_Empty;
    end Is_Empty;
 
    --------------
@@ -46,11 +44,11 @@ package body Gir_Reader.Element_Lists is
 
    function Length (Self : List) return Natural is
    begin
-      if Self.Internal.Is_Empty then
+      if Self.Is_Empty then
          return 0;
       end if;
 
-      return Natural (Real_Element_List (Self.Internal.Element).Value.Length);
+      return Natural (Real_Element_List (Self.Element).Length);
    end Length;
 
    -----------
@@ -59,7 +57,7 @@ package body Gir_Reader.Element_Lists is
 
    function Get
      (Self : List; Index : Positive) return Gir_Reader.Elements.Element
-   is (Real_Element_List (Self.Internal.Element).Value (Index));
+   is (Real_Element_List (Self.Element) (Index));
 
    --------------------
    --  Last_Element  --
@@ -73,25 +71,18 @@ package body Gir_Reader.Element_Lists is
    -------------------
 
    procedure Delete_Last (Self : in out List) is
-      V : Vector := Real_Element_List (Self.Internal.Element).Value;
-      R : Real_Element_List;
    begin
-      V.Delete_Last;
-      R.Value := V;
-      Self.Internal.Replace_Element (R);
+      Real_Element_List (Self.Reference.Element.all).Delete_Last;
    end Delete_Last;
 
    -------------
    --  Clear  --
    -------------
 
+   overriding
    procedure Clear (Self : in out List) is
    begin
-      if Self.Internal.Is_Empty then
-         return;
-      end if;
-
-      Self.Internal.Clear;
+      Holders.Holder (Self).Clear;
    end Clear;
 
    --------------
@@ -101,18 +92,17 @@ package body Gir_Reader.Element_Lists is
    procedure Append (Self : in out List; Item : Gir_Reader.Elements.Element) is
    begin
 
-      if Self.Internal.Is_Empty then
+      if Self.Is_Empty then
 
          declare
             R : Real_Element_List;
          begin
-            R.Value.Append (Item);
-            Self.Internal.Replace_Element (R);
+            R.Append (Item);
+            Self.Replace_Element (R);
          end;
 
       else
-         Real_Element_List (Self.Internal.Reference.Element.all).Value.Append
-           (Item);
+         Real_Element_List (Self.Reference.Element.all).Append (Item);
       end if;
 
    end Append;

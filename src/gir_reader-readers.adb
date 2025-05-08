@@ -7,19 +7,22 @@ with Sax.Readers;
 with Unicode.CES;
 
 with Gir_Reader.Element_Lists;
+with Gir_Reader.Key_Types;
 with Gir_Reader.Keys;
 
 package body Gir_Reader.Readers is
 
+   use Gir_Reader.Key_Types;
    use Gir_Reader.Keys;
    use type Ada.Containers.Count_Type;
+   use type Gir_Reader.Key_Types.Key;
 
    --  @private Internal use.
    --  A vector of keys.
    package Key_Vectors is new
      Ada.Containers.Indefinite_Vectors
        (Index_Type   => Positive,
-        Element_Type => Key'Class);
+        Element_Type => Gir_Reader.Key_Types.Key'Class);
 
    --
    --  Reader type
