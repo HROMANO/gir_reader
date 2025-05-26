@@ -612,13 +612,13 @@ package body Gir_Reader.Elements is
          List.Append (Value);
          Self.Set (Item, List);
       else
-         --  TODO: avoid copying (doesn't work below). Element_Lists needs
-         --  some reference access?
-         --  Vector_Data (Real_Element (Self.Reference.Element.all) (Item))
-         --  .Value.Append (Value);
-         List := Self.Get (Item);
-         List.Append (Value);
-         Self.Set (Item, List);
+         declare
+            Data : Vector_Data :=
+              Vector_Data (Real_Element (Self.Element).Element (Item));
+         begin
+            Data.Value.Append (Value);
+         end;
+
       end if;
    end Append;
 

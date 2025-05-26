@@ -61,7 +61,21 @@ procedure Examples is
       "xlib-2.0.gir",
       "xrandr-1.3.gir"];
 
+   List : Gir_Reader.Element_Lists.List;
+
 begin
+
+   List.Append (Gir);
+   List.Append (Repository);
+   List.Append (Namespace);
+
+   for E of List loop
+      TIO.Put_Line (E'Image);
+   end loop;
+
+   for E in List.Iterate loop
+      TIO.Put_Line (Gir_Reader.Elements.Element'(List (E))'Image);
+   end loop;
 
    for File_Name of Gir_Files loop
 
@@ -70,7 +84,7 @@ begin
 
       if Gir.Contains (Gir_Reader.Keys.Repository) then
          --  Only one repository in GIR files.
-         Repository := Gir.Get (Gir_Reader.Keys.Repository).Get (1);
+         Repository := Gir.Get (Gir_Reader.Keys.Repository) (1);
          TIO.Put_Line ("Repository attributes:");
          TIO.Put_Line (Repository.Get_Attributes'Image);
          TIO.Put_Line
@@ -79,7 +93,7 @@ begin
 
          if Repository.Contains (Gir_Reader.Keys.Namespace) then
             --  Only one namespace in a repository.
-            Namespace := Repository.Get (Gir_Reader.Keys.Namespace).Get (1);
+            Namespace := Repository.Get (Gir_Reader.Keys.Namespace) (1);
             TIO.Put_Line ("Namespace attributes:");
             TIO.Put_Line (Namespace.Get_Attributes'Image);
             TIO.Put_Line

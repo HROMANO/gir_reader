@@ -73,7 +73,7 @@ package body Gir_Reader.Readers is
      Pre =>
        Handler.Current_Element_List.Length > 0
        and then Handler.Current_Element_List.Length
-                = Natural (Handler.Current_Key_List.Length),
+                = Handler.Current_Key_List.Length,
      Post =>
        Handler.Current_Value = Empty_Text
        and then Handler.Current_Key_List.Length
