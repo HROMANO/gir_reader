@@ -171,28 +171,28 @@ package body Gir_Reader.Elements is
             Output.Put (": ");
 
             --  TODO: could this be avoided?
-            if Key in Gir_Reader.Key_Types.Boolean_Key then
+            if Key in Gir_Reader.Key_Types.Boolean_Key'Class then
                Image (Output, Boolean_Data (Data));
 
-            elsif Key in Gir_Reader.Key_Types.Parameter_Direction_Key then
+            elsif Key in Gir_Reader.Key_Types.Parameter_Direction_Key'Class then
                Image (Output, Parameter_Direction_Data (Data));
 
-            elsif Key in Gir_Reader.Key_Types.Integer_Key then
+            elsif Key in Gir_Reader.Key_Types.Integer_Key'Class then
                Image (Output, Integer_Data (Data));
 
-            elsif Key in Gir_Reader.Key_Types.Lifetime_Scope_Key then
+            elsif Key in Gir_Reader.Key_Types.Lifetime_Scope_Key'Class then
                Image (Output, Lifetime_Scope_Data (Data));
 
-            elsif Key in Gir_Reader.Key_Types.Ownership_Key then
+            elsif Key in Gir_Reader.Key_Types.Ownership_Key'Class then
                Image (Output, Ownership_Data (Data));
 
-            elsif Key in Gir_Reader.Key_Types.Signal_Emission_Key then
+            elsif Key in Gir_Reader.Key_Types.Signal_Emission_Key'Class then
                Image (Output, Signal_Emission_Data (Data));
 
-            elsif Key in Gir_Reader.Key_Types.Text_Key then
+            elsif Key in Gir_Reader.Key_Types.Text_Key'Class then
                Image (Output, Text_Data (Data));
 
-            elsif Key in Gir_Reader.Key_Types.Element_Key then
+            elsif Key in Gir_Reader.Key_Types.Element_Key'Class then
                Image (Output, Vector_Data (Data));
 
             end if;
@@ -272,14 +272,14 @@ package body Gir_Reader.Elements is
       end if;
 
       declare
-         Map : constant Real_Element := Real_Element (Self.Element);
+         Map : Real_Element renames Real_Element (Self.Element);
       begin
          for Iterator in Map.Iterate loop
             declare
-               K : constant Gir_Reader.Key_Types.Key'Class :=
-                 Element_Maps.Key (Iterator);
+               K : Gir_Reader.Key_Types.Key'Class
+                 renames Element_Maps.Key (Iterator);
             begin
-               if K in Gir_Reader.Key_Types.Element_Key then
+               if K in Gir_Reader.Key_Types.Element_Key'Class then
                   Result.Append (Gir_Reader.Key_Types.Element_Key (K));
                end if;
             end;
@@ -632,15 +632,15 @@ package body Gir_Reader.Elements is
          if not Self.Is_Empty then
 
             declare
-               Map : constant Real_Element := Real_Element (Self.Element);
+               Map : Real_Element renames Real_Element (Self.Element);
             begin
                for Iterator in Map.Iterate loop
 
                   declare
-                     K : Gir_Reader.Key_Types.Key'Class :=
-                       Element_Maps.Key (Iterator);
+                     K : Gir_Reader.Key_Types.Key'Class
+                       renames Element_Maps.Key (Iterator);
                   begin
-                     if K not in Gir_Reader.Key_Types.Element_Key then
+                     if K in Gir_Reader.Key_Types.Attribute_Key'Class then
                         Internal_Set (Result, K, Internal_Get (Self, K));
                      end if;
                   end;
