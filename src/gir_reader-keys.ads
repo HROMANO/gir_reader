@@ -680,7 +680,7 @@ package Gir_Reader.Keys is
    Repository : constant Element_Key := Create (-"repository");
 
    --  Return value of a callable.
-   Return_Value : constant Element_Key := Create (-"retrun value");
+   Return_Value : constant Element_Key := Create (-"return value");
 
    --  Position of the documentation in the original source code.
    Source_Position : constant Element_Key := Create (-"source position");
