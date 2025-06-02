@@ -5,7 +5,7 @@ pragma Ada_2022;
 with Ada.Strings.Text_Buffers;
 
 with Gir_Reader.Key_Types;
-with Gir_Reader.Key_Vectors;
+with Gir_Reader.Key_Lists;
 
 limited with Gir_Reader.Element_Lists;
 
@@ -40,7 +40,7 @@ package Gir_Reader.Elements is
    --  @param Self The element.
    --  @return The list of keys.
    function Get_Sub_Element_Key_List
-     (Self : Element) return Gir_Reader.Key_Vectors.Key_Vector;
+     (Self : Element) return Gir_Reader.Key_Lists.Element_Key_List;
 
    --  Get attributes of the element excluding sub-elements.
    --  @param Self The element.

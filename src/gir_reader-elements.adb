@@ -263,9 +263,9 @@ package body Gir_Reader.Elements is
    ------------------------------
 
    function Get_Sub_Element_Key_List
-     (Self : Element) return Gir_Reader.Key_Vectors.Key_Vector
+     (Self : Element) return Gir_Reader.Key_Lists.Element_Key_List
    is
-      Result : Gir_Reader.Key_Vectors.Key_Vector;
+      Result : Gir_Reader.Key_Lists.Element_Key_List;
    begin
       if Self.Is_Empty then
          return Result;
