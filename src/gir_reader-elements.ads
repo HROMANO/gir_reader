@@ -122,8 +122,8 @@ package Gir_Reader.Elements is
       return Lifetime_Scope
    with Pre'Class => Self.Contains (Item) or else raise Key_Error;
 
-   --  Get the requested lifetime scope key of the element or the provided default
-   --  value if Self doesn't contain the key.
+   --  Get the requested lifetime scope key of the element or the provided
+   --  default value if Self doesn't contain the key.
    --  @param Self The element.
    --  @param Item A lifetime scope key.
    --  @param Default Default return value.
@@ -164,8 +164,8 @@ package Gir_Reader.Elements is
       return Signal_Emission
    with Pre'Class => Self.Contains (Item) or else raise Key_Error;
 
-   --  Get the requested signal emission key of the element or the provided default
-   --  value if Self doesn't contain the key.
+   --  Get the requested signal emission key of the element or the provided
+   --  default value if Self doesn't contain the key.
    --  @param Self The element.
    --  @param Item A signal emission key.
    --  @param Default Default return value.

@@ -15,7 +15,7 @@ package body Gir_Reader.Readers is
    use Gir_Reader.Key_Types;
    use Gir_Reader.Keys;
    use type Ada.Containers.Count_Type;
-   use type Gir_Reader.Key_Types.Key;
+   use type Gir_Reader.Text;
 
    --  @private Internal use.
    --  A vector of keys.

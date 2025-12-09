@@ -5,7 +5,8 @@
 --  - All keys used in GIR files.
 --
 --  Source of information used:
---  https://gitlab.gnome.org/GNOME/gobject-introspection/-/blob/main/docs/gir-1.2.rnc
+--  https://gitlab.gnome.org/GNOME/gobject-introspection/-/blob/main/docs/gir-
+--  1.2.rnc
 --  Completed with real content of gir files for few missing keys.
 
 pragma Ada_2022;

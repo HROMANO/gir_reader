@@ -47,4 +47,4 @@ package body Gir_Reader.Key_Types is
       return The_Holder;
    end Create;
 
-end Gir_Reader.Key_TYpes;
+end Gir_Reader.Key_Types;

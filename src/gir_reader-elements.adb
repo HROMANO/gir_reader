@@ -174,7 +174,8 @@ package body Gir_Reader.Elements is
             if Key in Gir_Reader.Key_Types.Boolean_Key'Class then
                Image (Output, Boolean_Data (Data));
 
-            elsif Key in Gir_Reader.Key_Types.Parameter_Direction_Key'Class then
+            elsif Key in Gir_Reader.Key_Types.Parameter_Direction_Key'Class
+            then
                Image (Output, Parameter_Direction_Data (Data));
 
             elsif Key in Gir_Reader.Key_Types.Integer_Key'Class then

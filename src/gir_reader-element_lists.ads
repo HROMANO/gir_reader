@@ -19,7 +19,7 @@ package Gir_Reader.Element_Lists is
        (Index_Type   => Positive,
         Element_Type => Gir_Reader.Elements.Element);
 
-   -- This type is used to hold a list of Gir_Reader.Elements.Element.
+   --  This type is used to hold a list of Gir_Reader.Elements.Element.
    --  A 'Put_Image' aspect is used to control the display behavior.
    type List is new Element_Vectors.Vector with null record
    with Put_Image => Image;

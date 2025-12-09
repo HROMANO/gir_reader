@@ -5,7 +5,8 @@
 --  - All keys used in GIR files.
 --
 --  Source of information used:
---  https://gitlab.gnome.org/GNOME/gobject-introspection/-/blob/main/docs/gir-1.2.rnc
+--  https://gitlab.gnome.org/GNOME/gobject-introspection/-/blob/main/docs/gir-
+--  1.2.rnc
 --  Completed with real content of gir files for few missing keys.
 
 pragma Ada_2022;
@@ -223,7 +224,8 @@ package Gir_Reader.Keys is
    --  (for arrays or lists for example),
    --  - "full" the recipient owns the entire value.
    --  For details, see
-   --  https://gi.readthedocs.io/en/latest/annotations/giannotations.html#memory-and-lifecycle-management
+   --  https://gi.readthedocs.io/en/latest/annotations/giannotations.html#memo
+   --  ry-and-lifecycle-management
    Transfer_Ownership : constant Ownership_Key :=
      Create (-"transfer ownership");
 
