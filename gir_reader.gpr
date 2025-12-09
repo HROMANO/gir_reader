@@ -28,8 +28,7 @@ project Gir_Reader is
 
    package Documentation is
       for Excluded_Project_Files use
-        ("intl.gpr",
-         "xmlada.gpr",
+        ("xmlada.gpr",
          "xmlada_dom.gpr",
          "xmlada_sax.gpr",
          "xmlada_input.gpr",
@@ -38,5 +37,9 @@ project Gir_Reader is
         );
       for Output_Dir ("html") use "html";
    end Documentation;
+
+   package Format is
+      for CharSet ("Ada") use "utf-8";
+   end Format;
 
 end Gir_Reader;

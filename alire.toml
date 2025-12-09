@@ -13,4 +13,4 @@ tags = ["gir", "gtk"]
 xmlada = "^25.0.0"
 
 [[depends-on]]
-intl = "^1.0.1"
+gettext = "^25.9.3"

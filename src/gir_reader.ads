@@ -15,14 +15,11 @@ with Ada.Strings.Text_Buffers;
 with Ada.Strings.Unbounded;
 with Ada.Text_IO;
 
-with Intl;
+with Gettexts;
 
 private with Ada.Containers.Indefinite_Holders;
 
 package Gir_Reader is
-
-   --  Needed for child packages Keys and Readers.
-   use type Ada.Strings.Unbounded.Unbounded_String;
 
    -----------------------------------------
    --  Internal string type               --
@@ -52,8 +49,7 @@ package Gir_Reader is
    --  Mark strings for translation.
    --  @param Message An Ada string to translate.
    --  @return The translated string.
-   function "-" (Message : String) return String
-   is (Intl."-" (Message));
+   function "-" (Message : String) return String renames Gettexts.Get_Text;
 
    -------------------------
    --  Logging functions  --
@@ -117,7 +113,8 @@ package Gir_Reader is
    --    (for arrays or lists for example),
    --  @enum Full The recipient owns the entire value.
    --  For details, see
-   --  https://gi.readthedocs.io/en/latest/annotations/giannotations.html#memory-and-lifecycle-management
+   --  https://gi.readthedocs.io/en/latest/annotations/giannotations.html#memo
+   --  ry-and-lifecycle-management
    type Ownership is (None, Container, Full) with Put_Image => Image;
 
    --  Custom output of Ownership type enumeration.
