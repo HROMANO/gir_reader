@@ -1,8 +1,4 @@
---  This package provides:
---  - The 'Key' type as root of the other key types,
---  - Specialised key types corresponding to the type of the data they
---    are associated with (this allows dispatching and compile time checks),
---  - All keys used in GIR files.
+--  This package provides all keys used in GIR files.
 --
 --  Source of information used:
 --  https://gitlab.gnome.org/GNOME/gobject-introspection/-/blob/main/docs/gir-
@@ -23,7 +19,6 @@ package Gir_Reader.Keys is
 
    --  For class elements:
    --  True if a class is abstract.
-   --  Is_Abstract : constant Boolean_Key := Create (-"");
    Is_Abstract : constant Boolean_Key := Create (-"is abstract");
 
    --  For glib signal elements:
