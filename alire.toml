@@ -14,3 +14,6 @@ xmlada = "^25.0.0"
 
 [[depends-on]]
 gettext = "^25.9.3"
+
+[build-switches]
+"*".ada_version = ["-gnat2022", "-gnata"]

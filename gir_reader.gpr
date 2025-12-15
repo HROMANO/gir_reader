@@ -15,7 +15,7 @@ project Gir_Reader is
    for Library_Kind use Library_Type;
 
    package Compiler is
-      for Default_Switches ("Ada") use Gir_Reader_Config.Ada_Compiler_Switches & ("-gnata");
+      for Default_Switches ("Ada") use Gir_Reader_Config.Ada_Compiler_Switches;
    end Compiler;
 
    package Binder is
