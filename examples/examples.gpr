@@ -19,4 +19,8 @@ project Examples is
       for Artifacts (".") use ("share");
    end Install;
 
+   package Format is
+      for CharSet ("Ada") use "utf-8";
+   end Format;
+
 end Examples;
