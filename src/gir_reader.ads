@@ -13,6 +13,7 @@ pragma Ada_2022;
 
 with Ada.Strings.Text_Buffers;
 with Ada.Strings.Unbounded;
+with Ada.Strings.UTF_Encoding;
 with Ada.Text_IO;
 
 with Gettexts;
@@ -20,6 +21,8 @@ with Gettexts;
 private with Ada.Containers.Indefinite_Holders;
 
 package Gir_Reader is
+
+   subtype Utf8 is Ada.Strings.UTF_Encoding.UTF_8_String;
 
    -----------------------------------------
    --  Internal string type               --
@@ -49,7 +52,10 @@ package Gir_Reader is
    --  Mark strings for translation.
    --  @param Message An Ada string to translate.
    --  @return The translated string.
-   function "-" (Message : String) return String renames Gettexts.Get_Text;
+   --  function "-" (Message : String) return Utf8 renames Gettexts.Get_Text;
+   function "-" (Message : String) return Utf8
+   is (Gettexts.Get_Text_With_Domain
+         (Domain_Name => "gir_reader", Message_Id => Message));
 
    -------------------------
    --  Logging functions  --
@@ -82,6 +88,11 @@ package Gir_Reader is
    type Parameter_Direction is (Is_In, Is_Out, Is_In_Out)
    with Put_Image => Image;
 
+   --  Converts Item to an UTF-8 encoded string.
+   --  @param Item A Parameter_Direction.
+   --  @return Item converted to an UTF-8 string.
+   function To_String (Item : Parameter_Direction) return Utf8;
+
    --  Custom output of Parameter_Direction type enumeration.
    --  @param Output The buffer used for output.
    --  @param Item The enumeration key to display.
@@ -98,6 +109,11 @@ package Gir_Reader is
    --  @enum Forever Valid until the process terminates.
    type Lifetime_Scope is (Notified, Async, Call, Forever)
    with Put_Image => Image;
+
+   --  Converts Item to an UTF-8 encoded string.
+   --  @param Item A Lifetime_Scope.
+   --  @return Item converted to an UTF-8 string.
+   function To_String (Item : Lifetime_Scope) return Utf8;
 
    --  Custom output of Lifetime_Scope type enumeration.
    --  @param Output The buffer used for output.
@@ -117,6 +133,11 @@ package Gir_Reader is
    --  ry-and-lifecycle-management
    type Ownership is (None, Container, Full) with Put_Image => Image;
 
+   --  Converts Item to an UTF-8 encoded string.
+   --  @param Item An Ownership.
+   --  @return Item converted to an UTF-8 string.
+   function To_String (Item : Ownership) return Utf8;
+
    --  Custom output of Ownership type enumeration.
    --  @param Output The buffer used for output.
    --  @param Item The enumeration key to display.
@@ -134,6 +155,11 @@ package Gir_Reader is
    --  @enum Cleanup Invoke the object method handler in the last emission
    --    stage.
    type Signal_Emission is (First, Last, Cleanup) with Put_Image => Image;
+
+   --  Converts Item to an UTF-8 encoded string.
+   --  @param Item A Signal_Emission.
+   --  @return Item converted to an UTF-8 string.
+   function To_String (Item : Signal_Emission) return Utf8;
 
    --  Custom output of Signal_Emission type enumeration.
    --  @param Output The buffer used for output.
