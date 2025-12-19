@@ -18,7 +18,7 @@ package Gir_Reader.Key_Types is
    --  'Key' is the root type of all key types.
    type Key (<>) is tagged private;
 
-   function Create (Text : String) return Key;
+   function Create (Text : Utf8) return Key;
 
    --  'Less_Than' is needed to use keys in ordered maps.
    --  @param Left The left key to compare.

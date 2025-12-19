@@ -39,7 +39,7 @@ package body Gir_Reader.Key_Types is
    --  Create --
    -------------
 
-   function Create (Text : String) return Key is
+   function Create (Text : Utf8) return Key is
       The_Key    : constant Real_Key := (Length => Text'Length, Name => Text);
       The_Holder : Key;
    begin
