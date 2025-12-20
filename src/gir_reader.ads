@@ -16,8 +16,6 @@ with Ada.Strings.Unbounded;
 with Ada.Strings.UTF_Encoding;
 with Ada.Text_IO;
 
-with Gettexts;
-
 private with Ada.Containers.Indefinite_Holders;
 
 package Gir_Reader is
@@ -53,25 +51,7 @@ package Gir_Reader is
    --  @param Message An Ada string to translate.
    --  @return The translated string.
    --  function "-" (Message : String) return Utf8 renames Gettexts.Get_Text;
-   function "-" (Message : String) return Utf8
-   is (Gettexts.Get_Text_With_Domain
-         (Domain_Name => "gir_reader", Message_Id => Message));
-
-   -------------------------
-   --  Logging functions  --
-   -------------------------
-
-   --  Used in code to log runtime informations.
-   --  @param Message String information to output.
-   procedure Log_Info (Message : String) renames Ada.Text_IO.Put_Line;
-
-   --  Used in code to log runtime warnings.
-   --  @param Message String warning to output.
-   procedure Log_Warning (Message : String) renames Ada.Text_IO.Put_Line;
-
-   --  Used in code to log runtime errors.
-   --  @param Message String error to output.
-   procedure Log_Error (Message : String) renames Ada.Text_IO.Put_Line;
+   function "-" (Message : String) return Utf8;
 
    --------------------------------------------------------------------------
    --  Specific enumerations types:                                        --
@@ -190,5 +170,21 @@ private
    package Holders is new
      Ada.Containers.Indefinite_Holders
        (Element_Type => Holder_Content_Root'Class);
+
+   -------------------------
+   --  Logging functions  --
+   -------------------------
+
+   --  Used in code to log runtime informations.
+   --  @param Message String information to output.
+   procedure Log_Info (Message : String) renames Ada.Text_IO.Put_Line;
+
+   --  Used in code to log runtime warnings.
+   --  @param Message String warning to output.
+   procedure Log_Warning (Message : String) renames Ada.Text_IO.Put_Line;
+
+   --  Used in code to log runtime errors.
+   --  @param Message String error to output.
+   procedure Log_Error (Message : String) renames Ada.Text_IO.Put_Line;
 
 end Gir_Reader;
