@@ -20,6 +20,19 @@ package body Gir_Reader.Key_Types is
    function Hash (Item : Key'Class) return Ada.Containers.Hash_Type
    is (Ada.Strings.Hash (Real_Key (Item.Element).Name));
 
+   ---------------
+   -- To_String --
+   ---------------
+
+   function To_String (Item : Key) return Utf8 is
+   begin
+      if Item.Is_Empty then
+         Log_Error (-"No key. This is a bug in the library.");
+      end if;
+
+      return (Real_Key (Item.Element).Name);
+   end To_String;
+
    -----------
    -- Image --
    -----------

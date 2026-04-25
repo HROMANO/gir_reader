@@ -28,6 +28,17 @@ package body Gir_Reader.Element_Lists is
       Output.Put ("]");
    end Image;
 
+   -----------------
+   --  To_String  --
+   -----------------
+
+   function To_String (Item : List) return Utf8 is
+     (Item'Image);
+
+   ------------------
+   --  Empty_List  --
+   ------------------
+
    function Empty_List return List is
       Empty : List;
    begin

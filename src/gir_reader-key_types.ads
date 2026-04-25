@@ -31,6 +31,11 @@ package Gir_Reader.Key_Types is
    --  @return Value of the hash.
    function Hash (Item : Key'Class) return Ada.Containers.Hash_Type;
 
+   --  Converts a key to an UTF-8 String
+   --  @param Item The 'Key' to convert
+   --  @return An UTF-8 String
+   function To_String (Item : Key) return Utf8;
+
    --  Procedure to display a key.
    --  @param Output The buffer used for output.
    --  @param Item The 'Key' to display.

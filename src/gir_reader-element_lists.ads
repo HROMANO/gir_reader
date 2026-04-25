@@ -31,6 +31,11 @@ package Gir_Reader.Element_Lists is
      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
       Item   : List);
 
+   --  Converts Item to an UTF-8 encoded string.
+   --  @param Item A list of elements.
+   --  @return Item converted to an UTF-8 string.
+   function To_String (Item : List) return Utf8;
+
    function Empty_List return List;
 
 end Gir_Reader.Element_Lists;
