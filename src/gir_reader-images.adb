@@ -52,22 +52,22 @@ package body Gir_Reader.Images is
       Pattern : String := "" & ASCII.LF;
    begin
 
-      if Ada.Strings.Unbounded.Length (Item) = 0 then
+      if Get_Length (Item) = 0 then
          return "";
       end if;
 
       if Indent_First_Line then
-         Ada.Strings.Unbounded.Insert (Result, 1, Indent);
+         Insert (Result, 1, Indent);
       end if;
 
       while True loop
 
-         Index := Ada.Strings.Unbounded.Index (Result, Pattern, Start);
+         Index := Get_Index (Result, Pattern, Start);
 
          exit when Index = 0;
 
          Start := Index + 1;
-         Ada.Strings.Unbounded.Insert (Result, Start, Indent);
+         Insert (Result, Start, Indent);
 
       end loop;
 
