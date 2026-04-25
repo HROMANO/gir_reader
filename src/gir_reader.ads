@@ -148,15 +148,6 @@ package Gir_Reader is
      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
       Item   : Signal_Emission);
 
-   ------------------------
-   --  Exceptions types  --
-   ------------------------
-
-   --  Exception used in contracts if the key used in getter functions
-   --  is missing. Users shall use Gir_Reader.Elements.Contains or
-   --  Gir_Reader.Elements.Get_Keys to avoid this exception.
-   Key_Error : exception;
-
 private
 
    --  Indefinite_Holders are used to hide implementation details to

@@ -277,8 +277,8 @@ package body Gir_Reader.Elements is
       begin
          for Iterator in Map.Iterate loop
             declare
-               K : Gir_Reader.Key_Types.Key'Class
-                 renames Element_Maps.Key (Iterator);
+               K : Gir_Reader.Key_Types.Key'Class renames
+                 Element_Maps.Key (Iterator);
             begin
                if K in Gir_Reader.Key_Types.Element_Key'Class then
                   Result.Append (Gir_Reader.Key_Types.Element_Key (K));
@@ -300,14 +300,6 @@ package body Gir_Reader.Elements is
    is (Real_Element (Self.Element) (Item))
    with Inline;
 
-   ---------
-   -- Get --
-   ---------
-
-   function Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Boolean_Key) return Boolean
-   is (Boolean_Data (Internal_Get (Self, Item)).Value);
-
    -----------------
    -- Get_Or_Else --
    -----------------
@@ -316,16 +308,9 @@ package body Gir_Reader.Elements is
      (Self    : Element;
       Item    : Gir_Reader.Key_Types.Boolean_Key;
       Default : Boolean) return Boolean
-   is (if Self.Contains (Item) then Self.Get (Item) else Default);
-
-   ---------
-   -- Get --
-   ---------
-
-   function Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Parameter_Direction_Key)
-      return Parameter_Direction
-   is (Parameter_Direction_Data (Internal_Get (Self, Item)).Value);
+   is (if Self.Contains (Item)
+       then Boolean_Data (Internal_Get (Self, Item)).Value
+       else Default);
 
    -----------------
    -- Get_Or_Else --
@@ -335,15 +320,9 @@ package body Gir_Reader.Elements is
      (Self    : Element;
       Item    : Gir_Reader.Key_Types.Parameter_Direction_Key;
       Default : Parameter_Direction) return Parameter_Direction
-   is (if Self.Contains (Item) then Self.Get (Item) else Default);
-
-   ---------
-   -- Get --
-   ---------
-
-   function Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Integer_Key) return Integer
-   is (Integer_Data (Internal_Get (Self, Item)).Value);
+   is (if Self.Contains (Item)
+       then Parameter_Direction_Data (Internal_Get (Self, Item)).Value
+       else Default);
 
    -----------------
    -- Get_Or_Else --
@@ -353,16 +332,9 @@ package body Gir_Reader.Elements is
      (Self    : Element;
       Item    : Gir_Reader.Key_Types.Integer_Key;
       Default : Integer) return Integer
-   is (if Self.Contains (Item) then Self.Get (Item) else Default);
-
-   ---------
-   -- Get --
-   ---------
-
-   function Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Lifetime_Scope_Key)
-      return Lifetime_Scope
-   is (Lifetime_Scope_Data (Internal_Get (Self, Item)).Value);
+   is (if Self.Contains (Item)
+       then Integer_Data (Internal_Get (Self, Item)).Value
+       else Default);
 
    -----------------
    -- Get_Or_Else --
@@ -372,16 +344,9 @@ package body Gir_Reader.Elements is
      (Self    : Element;
       Item    : Gir_Reader.Key_Types.Lifetime_Scope_Key;
       Default : Lifetime_Scope) return Lifetime_Scope
-   is (if Self.Contains (Item) then Self.Get (Item) else Default);
-
-   ---------
-   -- Get --
-   ---------
-
-   function Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Ownership_Key)
-      return Ownership
-   is (Ownership_Data (Internal_Get (Self, Item)).Value);
+   is (if Self.Contains (Item)
+       then Lifetime_Scope_Data (Internal_Get (Self, Item)).Value
+       else Default);
 
    -----------------
    -- Get_Or_Else --
@@ -391,16 +356,9 @@ package body Gir_Reader.Elements is
      (Self    : Element;
       Item    : Gir_Reader.Key_Types.Ownership_Key;
       Default : Ownership) return Ownership
-   is (if Self.Contains (Item) then Self.Get (Item) else Default);
-
-   ---------
-   -- Get --
-   ---------
-
-   function Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Signal_Emission_Key)
-      return Signal_Emission
-   is (Signal_Emission_Data (Internal_Get (Self, Item)).Value);
+   is (if Self.Contains (Item)
+       then Ownership_Data (Internal_Get (Self, Item)).Value
+       else Default);
 
    -----------------
    -- Get_Or_Else --
@@ -410,15 +368,9 @@ package body Gir_Reader.Elements is
      (Self    : Element;
       Item    : Gir_Reader.Key_Types.Signal_Emission_Key;
       Default : Signal_Emission) return Signal_Emission
-   is (if Self.Contains (Item) then Self.Get (Item) else Default);
-
-   ---------
-   -- Get --
-   ---------
-
-   function Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Text_Key) return Text
-   is (Text_Data (Internal_Get (Self, Item)).Value);
+   is (if Self.Contains (Item)
+       then Signal_Emission_Data (Internal_Get (Self, Item)).Value
+       else Default);
 
    -----------------
    -- Get_Or_Else --
@@ -427,16 +379,9 @@ package body Gir_Reader.Elements is
    function Get_Or_Else
      (Self : Element; Item : Gir_Reader.Key_Types.Text_Key; Default : Text)
       return Text
-   is (if Self.Contains (Item) then Self.Get (Item) else Default);
-
-   ---------
-   -- Get --
-   ---------
-
-   function Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Element_Key)
-      return Gir_Reader.Element_Lists.List
-   is (Vector_Data (Internal_Get (Self, Item)).Value);
+   is (if Self.Contains (Item)
+       then Text_Data (Internal_Get (Self, Item)).Value
+       else Default);
 
    -----------------
    -- Get_Or_Else --
@@ -447,7 +392,9 @@ package body Gir_Reader.Elements is
       Item    : Gir_Reader.Key_Types.Element_Key;
       Default : Gir_Reader.Element_Lists.List)
       return Gir_Reader.Element_Lists.List
-   is (if Self.Contains (Item) then Self.Get (Item) else Default);
+   is (if Self.Contains (Item)
+       then Vector_Data (Internal_Get (Self, Item)).Value
+       else Default);
 
    ------------------
    -- Internal_Set --
@@ -607,8 +554,9 @@ package body Gir_Reader.Elements is
       List : Gir_Reader.Element_Lists.List;
    begin
       if Self.Is_Empty
-        or else not Real_Element (Self.Element).Contains
-                      (Gir_Reader.Key_Types.Key (Item))
+        or else
+          not Real_Element (Self.Element).Contains
+                (Gir_Reader.Key_Types.Key (Item))
       then
          List.Append (Value);
          Self.Set (Item, List);
@@ -638,8 +586,8 @@ package body Gir_Reader.Elements is
                for Iterator in Map.Iterate loop
 
                   declare
-                     K : Gir_Reader.Key_Types.Key'Class
-                       renames Element_Maps.Key (Iterator);
+                     K : Gir_Reader.Key_Types.Key'Class renames
+                       Element_Maps.Key (Iterator);
                   begin
                      if K in Gir_Reader.Key_Types.Attribute_Key'Class then
                         Internal_Set (Result, K, Internal_Get (Self, K));

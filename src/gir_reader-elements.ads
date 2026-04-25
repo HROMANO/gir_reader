@@ -51,15 +51,6 @@ package Gir_Reader.Elements is
    --  Get methods --
    ------------------
 
-   --  Get the requested boolean key of the element.
-   --  To avoid exception, check the existence of the key before the call.
-   --  @param Self The element.
-   --  @param Item A boolean key.
-   --  @return The value of the key.
-   function Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Boolean_Key) return Boolean
-   with Pre'Class => Self.Contains (Item) or else raise Key_Error;
-
    --  Get the requested boolean key of the element or the provided default
    --  value if Self doesn't contain the key.
    --  @param Self The element.
@@ -70,16 +61,6 @@ package Gir_Reader.Elements is
      (Self    : Element;
       Item    : Gir_Reader.Key_Types.Boolean_Key;
       Default : Boolean) return Boolean;
-
-   --  Get the requested in out key of the element.
-   --  To avoid exception, check the existence of the key before the call.
-   --  @param Self The element.
-   --  @param Item An in out key.
-   --  @return The value of the key.
-   function Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Parameter_Direction_Key)
-      return Parameter_Direction
-   with Pre'Class => Self.Contains (Item) or else raise Key_Error;
 
    --  Get the requested in out key of the element or the provided default
    --  value if Self doesn't contain the key.
@@ -92,15 +73,6 @@ package Gir_Reader.Elements is
       Item    : Gir_Reader.Key_Types.Parameter_Direction_Key;
       Default : Parameter_Direction) return Parameter_Direction;
 
-   --  Get the requested integer key of the element.
-   --  To avoid exception, check the existence of the key before the call.
-   --  @param Self The element.
-   --  @param Item An integer key.
-   --  @return The value of the key.
-   function Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Integer_Key) return Integer
-   with Pre'Class => Self.Contains (Item) or else raise Key_Error;
-
    --  Get the requested integer key of the element or the provided default
    --  value if Self doesn't contain the key.
    --  @param Self The element.
@@ -111,16 +83,6 @@ package Gir_Reader.Elements is
      (Self    : Element;
       Item    : Gir_Reader.Key_Types.Integer_Key;
       Default : Integer) return Integer;
-
-   --  Get the requested lifetime scope key of the element.
-   --  To avoid exception, check the existence of the key before the call.
-   --  @param Self The element.
-   --  @param Item A lifetime scope key.
-   --  @return The value of the key.
-   function Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Lifetime_Scope_Key)
-      return Lifetime_Scope
-   with Pre'Class => Self.Contains (Item) or else raise Key_Error;
 
    --  Get the requested lifetime scope key of the element or the provided
    --  default value if Self doesn't contain the key.
@@ -133,16 +95,6 @@ package Gir_Reader.Elements is
       Item    : Gir_Reader.Key_Types.Lifetime_Scope_Key;
       Default : Lifetime_Scope) return Lifetime_Scope;
 
-   --  Get the requested ownership key of the element.
-   --  To avoid exception, check the existence of the key before the call.
-   --  @param Self The element.
-   --  @param Item An ownership key.
-   --  @return The value of the key.
-   function Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Ownership_Key)
-      return Ownership
-   with Pre'Class => Self.Contains (Item) or else raise Key_Error;
-
    --  Get the requested ownership key of the element or the provided default
    --  value if Self doesn't contain the key.
    --  @param Self The element.
@@ -153,16 +105,6 @@ package Gir_Reader.Elements is
      (Self    : Element;
       Item    : Gir_Reader.Key_Types.Ownership_Key;
       Default : Ownership) return Ownership;
-
-   --  Get the requested signal emission key of the element.
-   --  To avoid exception, check the existence of the key before the call.
-   --  @param Self The element.
-   --  @param Item A signal emission key.
-   --  @return The value of the key.
-   function Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Signal_Emission_Key)
-      return Signal_Emission
-   with Pre'Class => Self.Contains (Item) or else raise Key_Error;
 
    --  Get the requested signal emission key of the element or the provided
    --  default value if Self doesn't contain the key.
@@ -175,15 +117,6 @@ package Gir_Reader.Elements is
       Item    : Gir_Reader.Key_Types.Signal_Emission_Key;
       Default : Signal_Emission) return Signal_Emission;
 
-   --  Get the requested text key of the element.
-   --  To avoid exception, check the existence of the key before the call.
-   --  @param Self The element.
-   --  @param Item A text key.
-   --  @return The value of the key.
-   function Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Text_Key) return Text
-   with Pre'Class => Self.Contains (Item) or else raise Key_Error;
-
    --  Get the requested text key of the element or the provided default
    --  value if Self doesn't contain the key.
    --  @param Self The element.
@@ -193,17 +126,6 @@ package Gir_Reader.Elements is
    function Get_Or_Else
      (Self : Element; Item : Gir_Reader.Key_Types.Text_Key; Default : Text)
       return Text;
-
-   --  Get the requested sub-element key of the element.
-   --  To avoid exception, check the existence of the key before the call.
-   --  Note: sub-elements are always of type 'List'.
-   --  @param Self The element.
-   --  @param Item An element key.
-   --  @return The value of the key.
-   function Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Element_Key)
-      return Gir_Reader.Element_Lists.List
-   with Pre => Self.Contains (Item) or else raise Key_Error;
 
    --  Get the requested sub-element key of the element or the provided default
    --  value if Self doesn't contain the key.
