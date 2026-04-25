@@ -28,4 +28,10 @@ package body Gir_Reader.Element_Lists is
       Output.Put ("]");
    end Image;
 
+   function Empty_List return List is
+      Empty : List;
+   begin
+      return Empty;
+   end Empty_List;
+
 end Gir_Reader.Element_Lists;

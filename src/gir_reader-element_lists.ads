@@ -31,4 +31,6 @@ package Gir_Reader.Element_Lists is
      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
       Item   : List);
 
+   function Empty_List return List;
+
 end Gir_Reader.Element_Lists;
