@@ -27,10 +27,10 @@ package body Gir_Reader.Key_Types is
    function To_String (Item : Key) return Utf8 is
    begin
       if Item.Is_Empty then
-         Log_Error (-"No key. This is a bug in the library.");
+         return "";
+      else
+         return (Real_Key (Item.Element).Name);
       end if;
-
-      return (Real_Key (Item.Element).Name);
    end To_String;
 
    -----------
@@ -41,11 +41,7 @@ package body Gir_Reader.Key_Types is
      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
       Item   : Key) is
    begin
-      if Item.Is_Empty then
-         Log_Error (-"No key. This is a bug in the library.");
-      end if;
-
-      Output.Put (Real_Key (Item.Element).Name);
+      Output.Put (Item.To_String);
    end Image;
 
    -------------
