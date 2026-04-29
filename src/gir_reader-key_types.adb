@@ -6,19 +6,26 @@ package body Gir_Reader.Key_Types is
       Name : String (1 .. Length);
    end record;
 
+   -----------
+   -- Equal --
+   -----------
+
+   function "=" (Left : Key; Right : Key) return Boolean
+   is (Left.To_String = Right.To_String);
+
    ---------------
    -- Less_Than --
    ---------------
 
    function Less_Than (Left, Right : Key'Class) return Boolean
-   is (Real_Key (Left.Element).Name < Real_Key (Right.Element).Name);
+   is (Left.To_String < Right.To_String);
 
    ----------
    -- Hash --
    ----------
 
    function Hash (Item : Key'Class) return Ada.Containers.Hash_Type
-   is (Ada.Strings.Hash (Real_Key (Item.Element).Name));
+   is (Ada.Strings.Hash (Item.To_String));
 
    ---------------
    -- To_String --

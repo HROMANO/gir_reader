@@ -20,6 +20,12 @@ package Gir_Reader.Key_Types is
 
    function Create (Text : Utf8) return Key;
 
+   --  '=' tests equality of keys.
+   --  @param Left The left key to compare.
+   --  @param Right The right key to compare.
+   --  @return True is Left = Right.
+   function "=" (Left : Key; Right : Key) return Boolean;
+
    --  'Less_Than' is needed to use keys in ordered maps.
    --  @param Left The left key to compare.
    --  @param Right The right key to compare.
