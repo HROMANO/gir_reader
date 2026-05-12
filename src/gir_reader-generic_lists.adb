@@ -18,8 +18,8 @@ package body Gir_Reader.Generic_Lists is
       Output.Put ("]");
    end Image;
 
-   function To_String (Item : T_List) return Utf8 is
-      (Item'Image);
+   function To_String (Item : T_List) return Utf8
+   is (Item'Image);
 
    function Empty_List return T_List is
       List : T_List;
