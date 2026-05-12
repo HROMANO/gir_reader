@@ -551,12 +551,23 @@ package body Gir_Reader.Elements is
       Item  : Gir_Reader.Key_Types.Element_Key;
       Value : Element)
    is
-      --  TODO : avoid copying and append in place if possible
-      List : Gir_Reader.Element_Lists.List :=
-        Self.Get_Or_Else (Item, Gir_Reader.Element_Lists.Empty_List);
+      List : Gir_Reader.Element_Lists.List;
    begin
-      List.Append (Value);
-      Self.Set (Item, List);
+      if Self.Is_Empty
+        or else
+          not Real_Element (Self.Element).Contains
+                (Gir_Reader.Key_Types.Key (Item))
+      then
+         List.Append (Value);
+         Self.Set (Item, List);
+      else
+         Gir_Reader.Element_Lists.List
+           (Vector_Data
+              (Real_Element (Self.Reference.Element.all).Reference (Item)
+                 .Element.all)
+              .Value)
+           .Append (Value);
+      end if;
    end Append;
 
    --------------------
