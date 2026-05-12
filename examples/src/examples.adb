@@ -4,6 +4,8 @@ with Ada.Containers.Indefinite_Vectors;
 with Ada.IO_Exceptions;
 with Ada.Text_IO;
 
+with Gir_Reader;
+with Gir_Reader.Attribute_Maps;
 with Gir_Reader.Elements;
 with Gir_Reader.Element_Lists;
 with Gir_Reader.Keys;
@@ -63,7 +65,22 @@ procedure Examples is
 
    List : Gir_Reader.Element_Lists.List;
 
+   Test : Gir_Reader.Attribute_Maps.Attribute_Map;
+
 begin
+
+   TIO.Put_Line (Test'Image);
+   Test.Set (Gir_Reader.Keys.C_Identifier, Gir_Reader."+" ("Toto"));
+   TIO.Put_Line (Test'Image);
+   Test.Set (Gir_Reader.Keys.C_Identifier, Gir_Reader."+" ("Tutu"));
+   TIO.Put_Line (Test'Image);
+   Test.Set (Gir_Reader.Keys.Length, 10);
+   TIO.Put_Line (Test'Image);
+   TIO.Put_Line (Test.Get_Attribute_Keys'Image);
+   Test.Unset (Gir_Reader.Keys.C_Identifier);
+   TIO.Put_Line (Test'Image);
+   Test.Set (Gir_Reader.Keys.Is_Abstract, True);
+   TIO.Put_Line (Test'Image);
 
    List.Append (Gir);
    List.Append (Repository);
@@ -114,6 +131,9 @@ begin
       end loop KEYS;
 
    end loop FILES;
+
+   Gir := Gir_Reader.Readers.Read ("share/examples/" & Gir_Files (8));
+   TIO.Put_Line (Gir'Image);
 
 exception
    when Ada.IO_Exceptions.Device_Error =>
