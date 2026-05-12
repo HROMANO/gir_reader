@@ -163,9 +163,9 @@ package body Gir_Reader.Elements is
 
       for Index in Item.Iterate loop
          declare
-            Key  : constant Gir_Reader.Key_Types.Key'Class :=
+            Key  : Gir_Reader.Key_Types.Key'Class renames
               Element_Maps.Key (Index);
-            Data : constant Holder_Content_Root'Class := Item.Element (Key);
+            Data : Holder_Content_Root'Class renames Item.Element (Key);
          begin
             Gir_Reader.Key_Types.Image (Output, Key);
             Output.Put (": ");
@@ -551,24 +551,12 @@ package body Gir_Reader.Elements is
       Item  : Gir_Reader.Key_Types.Element_Key;
       Value : Element)
    is
-      List : Gir_Reader.Element_Lists.List;
+      --  TODO : avoid copying and append in place if possible
+      List : Gir_Reader.Element_Lists.List :=
+        Self.Get_Or_Else (Item, Gir_Reader.Element_Lists.Empty_List);
    begin
-      if Self.Is_Empty
-        or else
-          not Real_Element (Self.Element).Contains
-                (Gir_Reader.Key_Types.Key (Item))
-      then
-         List.Append (Value);
-         Self.Set (Item, List);
-      else
-         declare
-            Data : Vector_Data :=
-              Vector_Data (Real_Element (Self.Element).Element (Item));
-         begin
-            Data.Value.Append (Value);
-         end;
-
-      end if;
+      List.Append (Value);
+      Self.Set (Item, List);
    end Append;
 
    --------------------
