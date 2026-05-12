@@ -4,23 +4,27 @@ with Ada.Containers.Indefinite_Vectors;
 with Ada.Strings.Text_Buffers;
 
 generic
-   type Element (<>) is tagged private;
+   type T (<>) is tagged private;
    with
-     procedure Element_Image
+     procedure T_Image
        (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
-        Item   : Element) is <>;
+        Item   : T) is <>;
 package Gir_Reader.Generic_Lists is
 
-   package Element_Lists is new
+   package T_Lists is new
      Ada.Containers.Indefinite_Vectors
        (Index_Type   => Positive,
-        Element_Type => Element);
+        Element_Type => T);
 
-   type Element_List is new Element_Lists.Vector with null record
+   type T_List is new T_Lists.Vector with null record
    with Put_Image => Image;
 
    procedure Image
      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
-      Item   : Element_List);
+      Item   : T_List);
+
+   function To_String (Item : T_List) return Utf8;
+
+   function Empty_List return T_List;
 
 end Gir_Reader.Generic_Lists;
