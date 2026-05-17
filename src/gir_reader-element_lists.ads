@@ -38,4 +38,8 @@ package Gir_Reader.Element_Lists is
 
    function Empty_List return List;
 
+   function "/"
+     (Left : List; Right : Positive)
+      return Gir_Reader.Elements.Element;
+
 end Gir_Reader.Element_Lists;

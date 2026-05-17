@@ -45,4 +45,16 @@ package body Gir_Reader.Element_Lists is
       return Empty;
    end Empty_List;
 
+   function "/"
+     (Left : List; Right : Positive)
+      return Gir_Reader.Elements.Element is
+      use type Ada.Containers.Count_Type;
+   begin
+      if Ada.Containers.Count_Type (Right) <= Left.Length then
+         return Left (Right);
+      else
+         return Gir_Reader.Elements.Empty_Element;
+      end if;
+   end "/";
+
 end Gir_Reader.Element_Lists;

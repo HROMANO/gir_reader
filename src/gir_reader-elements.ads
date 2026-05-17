@@ -246,6 +246,14 @@ package Gir_Reader.Elements is
      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
       Item   : Element);
 
+   function "/"
+     (Left : Element; Right : Gir_Reader.Key_Types.Element_Key)
+      return Gir_Reader.Element_Lists.List;
+
+   function "/"
+     (Left : Element; Right : Gir_Reader.Key_Types.Element_Key)
+      return Element;
+
 private
 
    --  The 'Element' type is a Holder to hide the real type used in the body

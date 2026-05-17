@@ -615,4 +615,18 @@ package body Gir_Reader.Elements is
       end if;
    end Image;
 
+   function "/"
+     (Left : Element; Right : Gir_Reader.Key_Types.Element_Key)
+      return Gir_Reader.Element_Lists.List is
+      (Left.Get_Or_Else (Right, Gir_Reader.Element_Lists.Empty_List));
+
+   function "/"
+     (Left : Element; Right : Gir_Reader.Key_Types.Element_Key) return Element is
+      use type Gir_Reader.Element_Lists.List;
+   begin
+      return Left / Right / 1;
+   end "/";
+
+
+
 end Gir_Reader.Elements;
