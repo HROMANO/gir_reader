@@ -29,11 +29,11 @@ package body Gir_Reader.Readers is
    --
 
    type Reader is new Sax.Readers.Reader with record
-      Current_Value        : Text;
-      Current_Key_List     : Key_Vectors.Vector;
-      Current_Element      : Gir_Reader.Elements.Element;
-      Current_Element_List : Gir_Reader.Element_Lists.List;
-      Result               : Gir_Reader.Elements.Element;
+      Current_Value                 : Text;
+      Current_Key_List              : Key_Vectors.Vector;
+      Current_Element               : Gir_Reader.Elements.Element;
+      Current_Element_List          : Gir_Reader.Element_Lists.List;
+      Result                        : Gir_Reader.Elements.Element;
       Skipped_Unknown_Element_Depth : Natural := 0;
    end record;
 
@@ -49,9 +49,10 @@ package body Gir_Reader.Readers is
       Qname         : Unicode.CES.Byte_Sequence := "";
       Atts          : Sax.Attributes.Attributes'Class)
    with
-     Pre => Handler.Current_Value = Empty_Text,
+     Pre  => Handler.Current_Value = Empty_Text,
      Post =>
-       Handler.Current_Element_List.Length = Handler'Old.Current_Key_List.Length + 1
+       Handler.Current_Element_List.Length
+       = Handler'Old.Current_Key_List.Length + 1
        or else
          Handler.Skipped_Unknown_Element_Depth
          = Handler'Old.Skipped_Unknown_Element_Depth + 1;
@@ -75,15 +76,18 @@ package body Gir_Reader.Readers is
       Local_Name    : Unicode.CES.Byte_Sequence := "";
       Qname         : Unicode.CES.Byte_Sequence := "")
    with
-     Pre =>
+     Pre  =>
        Handler.Current_Element_List.Length > 0
-       and then Handler.Current_Element_List.Length
-                = Handler.Current_Key_List.Length,
+       and then
+         Handler.Current_Element_List.Length = Handler.Current_Key_List.Length,
      Post =>
        Handler.Current_Value = Empty_Text
-       and then (Handler.Current_Key_List.Length
-                  = Handler'Old.Current_Key_List.Length - 1 or else
-                    Handler.Skipped_Unknown_Element_Depth = Handler'Old.Skipped_Unknown_Element_Depth - 1);
+       and then
+         (Handler.Current_Key_List.Length
+          = Handler'Old.Current_Key_List.Length - 1
+          or else
+            Handler.Skipped_Unknown_Element_Depth
+            = Handler'Old.Skipped_Unknown_Element_Depth - 1);
 
    -----------------------
    -- Boolean_Attribute --
