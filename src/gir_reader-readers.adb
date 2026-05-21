@@ -34,6 +34,7 @@ package body Gir_Reader.Readers is
       Current_Element      : Gir_Reader.Elements.Element;
       Current_Element_List : Gir_Reader.Element_Lists.List;
       Result               : Gir_Reader.Elements.Element;
+      Skipped_Unknown_Element_Depth : Natural := 0;
    end record;
 
    -------------------
@@ -49,7 +50,11 @@ package body Gir_Reader.Readers is
       Atts          : Sax.Attributes.Attributes'Class)
    with
      Pre => Handler.Current_Value = Empty_Text,
-     Post => Handler.Current_Element_List.Length > 0;
+     Post =>
+       Handler.Current_Element_List.Length = Handler'Old.Current_Key_List.Length + 1
+       or else
+         Handler.Skipped_Unknown_Element_Depth
+         = Handler'Old.Skipped_Unknown_Element_Depth + 1;
 
    ----------------
    -- Characters --
@@ -76,8 +81,9 @@ package body Gir_Reader.Readers is
                 = Handler.Current_Key_List.Length,
      Post =>
        Handler.Current_Value = Empty_Text
-       and then Handler.Current_Key_List.Length
-                = Handler'Old.Current_Key_List.Length - 1;
+       and then (Handler.Current_Key_List.Length
+                  = Handler'Old.Current_Key_List.Length - 1 or else
+                    Handler.Skipped_Unknown_Element_Depth = Handler'Old.Skipped_Unknown_Element_Depth - 1);
 
    -----------------------
    -- Boolean_Attribute --
@@ -556,6 +562,11 @@ package body Gir_Reader.Readers is
       Atts          : Sax.Attributes.Attributes'Class) is
    begin
 
+      if Handler.Skipped_Unknown_Element_Depth > 0 then
+         Handler.Skipped_Unknown_Element_Depth := @ + 1;
+         return;
+      end if;
+
       Handler.Current_Element_List.Append (Handler.Current_Element);
       Handler.Current_Element := Gir_Reader.Elements.Empty_Element;
 
@@ -731,6 +742,7 @@ package body Gir_Reader.Readers is
          Log_Info ("Unknown start Element " & Local_Name);
          Handler.Current_Element := Handler.Current_Element_List.Last_Element;
          Handler.Current_Element_List.Delete_Last;
+         Handler.Skipped_Unknown_Element_Depth := @ + 1;
       end if;
 
    end Start_Element;
@@ -757,6 +769,11 @@ package body Gir_Reader.Readers is
       Local_Name    : Unicode.CES.Byte_Sequence := "";
       Qname         : Unicode.CES.Byte_Sequence := "") is
    begin
+
+      if Handler.Skipped_Unknown_Element_Depth > 0 then
+         Handler.Skipped_Unknown_Element_Depth := @ - 1;
+         return;
+      end if;
 
       if Handler.Current_Value /= Empty_Text then
          Handler.Current_Element.Set (Content, Handler.Current_Value);
