@@ -231,325 +231,331 @@ package body Gir_Reader.Readers is
    --------------------
 
    procedure Get_Attributes
-     (Handler : in out Reader; Atts : Sax.Attributes.Attributes'Class)
-   is
-      Attribute_Name : Text;
+     (Handler : in out Reader; Atts : Sax.Attributes.Attributes'Class) is
    begin
       for J in 0 .. Atts.Get_Length - 1 loop
-         Attribute_Name := +Atts.Get_Qname (J);
-
-         if Attribute_Name = "abstract" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Abstract, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "action" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Action, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "allow-none" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Allow_None, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "caller-allocates" then
-            Boolean_Attribute
-              (Handler,
-               +Attribute_Name,
-               Is_Caller_Allocates,
-               Atts.Get_Value (J));
-
-         elsif Attribute_Name = "construct" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Construct, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "construct-only" then
-            Boolean_Attribute
-              (Handler,
-               +Attribute_Name,
-               Is_Construct_Only,
-               Atts.Get_Value (J));
-
-         elsif Attribute_Name = "deprecated" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Deprecated, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "detailed" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Detailed, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "disguised" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Disguised, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "final" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Final, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "foreign" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Foreign, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "glib:fundamental" then
-            Boolean_Attribute
-              (Handler,
-               +Attribute_Name,
-               Is_Glib_Fundamental,
-               Atts.Get_Value (J));
-
-         elsif Attribute_Name = "introspectable" then
-            Boolean_Attribute
-              (Handler,
-               +Attribute_Name,
-               Is_Introspectable,
-               Atts.Get_Value (J));
-
-         elsif Attribute_Name = "no-hooks" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_No_Hooks, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "no-recurse" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_No_Recurse, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "nullable" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Nullable, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "opaque" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Opaque, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "optional" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Optional, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "pointer" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Pointer, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "private" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Private, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "readable" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Readable, Atts.Get_Value (J));
-
-         elsif Attribute_Name = "skip" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Skip, Atts.Get_Value (J));
+         ONE_ATTRIBUTE : declare
+            Attribute_Name : String := Atts.Get_Qname (J);
+         begin
+
+            if Attribute_Name = "abstract" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Abstract, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "action" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Action, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "allow-none" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Allow_None, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "caller-allocates" then
+               Boolean_Attribute
+                 (Handler,
+                  Attribute_Name,
+                  Is_Caller_Allocates,
+                  Atts.Get_Value (J));
+
+            elsif Attribute_Name = "construct" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Construct, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "construct-only" then
+               Boolean_Attribute
+                 (Handler,
+                  Attribute_Name,
+                  Is_Construct_Only,
+                  Atts.Get_Value (J));
+
+            elsif Attribute_Name = "deprecated" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Deprecated, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "detailed" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Detailed, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "disguised" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Disguised, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "final" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Final, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "foreign" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Foreign, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "glib:fundamental" then
+               Boolean_Attribute
+                 (Handler,
+                  Attribute_Name,
+                  Is_Glib_Fundamental,
+                  Atts.Get_Value (J));
+
+            elsif Attribute_Name = "introspectable" then
+               Boolean_Attribute
+                 (Handler,
+                  Attribute_Name,
+                  Is_Introspectable,
+                  Atts.Get_Value (J));
+
+            elsif Attribute_Name = "no-hooks" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_No_Hooks, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "no-recurse" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_No_Recurse, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "nullable" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Nullable, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "opaque" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Opaque, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "optional" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Optional, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "pointer" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Pointer, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "private" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Private, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "readable" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Readable, Atts.Get_Value (J));
+
+            elsif Attribute_Name = "skip" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Skip, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "throws" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Throws, Atts.Get_Value (J));
+            elsif Attribute_Name = "throws" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Throws, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "writable" then
-            Boolean_Attribute
-              (Handler, +Attribute_Name, Is_Writable, Atts.Get_Value (J));
+            elsif Attribute_Name = "writable" then
+               Boolean_Attribute
+                 (Handler, Attribute_Name, Is_Writable, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "zero-terminated" then
-            Boolean_Attribute
-              (Handler,
-               +Attribute_Name,
-               Is_Zero_Terminated,
-               Atts.Get_Value (J));
+            elsif Attribute_Name = "zero-terminated" then
+               Boolean_Attribute
+                 (Handler,
+                  Attribute_Name,
+                  Is_Zero_Terminated,
+                  Atts.Get_Value (J));
 
-         elsif Attribute_Name = "bits" then
-            Integer_Attribute
-              (Handler, +Attribute_Name, Bits, Atts.Get_Value (J));
+            elsif Attribute_Name = "bits" then
+               Integer_Attribute
+                 (Handler, Attribute_Name, Bits, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "closure" then
-            Integer_Attribute
-              (Handler, +Attribute_Name, Closure, Atts.Get_Value (J));
+            elsif Attribute_Name = "closure" then
+               Integer_Attribute
+                 (Handler, Attribute_Name, Closure, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "destroy" then
-            Integer_Attribute
-              (Handler, +Attribute_Name, Destroy, Atts.Get_Value (J));
+            elsif Attribute_Name = "destroy" then
+               Integer_Attribute
+                 (Handler, Attribute_Name, Destroy, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "fixed-size" then
-            Integer_Attribute
-              (Handler, +Attribute_Name, Fixed_Size, Atts.Get_Value (J));
+            elsif Attribute_Name = "fixed-size" then
+               Integer_Attribute
+                 (Handler, Attribute_Name, Fixed_Size, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "length" then
-            Integer_Attribute
-              (Handler, +Attribute_Name, Length, Atts.Get_Value (J));
+            elsif Attribute_Name = "length" then
+               Integer_Attribute
+                 (Handler, Attribute_Name, Length, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "direction" then
-            Parameter_Direction_Attribute
-              (Handler, +Attribute_Name, Direction, Atts.Get_Value (J));
+            elsif Attribute_Name = "direction" then
+               Parameter_Direction_Attribute
+                 (Handler, Attribute_Name, Direction, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "scope" then
-            Lifetime_Scope_Attribute
-              (Handler, +Attribute_Name, Scope, Atts.Get_Value (J));
+            elsif Attribute_Name = "scope" then
+               Lifetime_Scope_Attribute
+                 (Handler, Attribute_Name, Scope, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "transfer-ownership" then
-            Ownership_Attribute
-              (Handler,
-               +Attribute_Name,
-               Transfer_Ownership,
-               Atts.Get_Value (J));
+            elsif Attribute_Name = "transfer-ownership" then
+               Ownership_Attribute
+                 (Handler,
+                  Attribute_Name,
+                  Transfer_Ownership,
+                  Atts.Get_Value (J));
 
-         elsif Attribute_Name = "when" then
-            Signal_Emission_Attribute
-              (Handler, +Attribute_Name, Signal_When, Atts.Get_Value (J));
+            elsif Attribute_Name = "when" then
+               Signal_Emission_Attribute
+                 (Handler, Attribute_Name, Signal_When, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "c:identifier" then
-            Handler.Current_Element.Set (C_Identifier, +Atts.Get_Value (J));
+            elsif Attribute_Name = "c:identifier" then
+               Handler.Current_Element.Set (C_Identifier, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "c:identifier-prefixes" then
-            Handler.Current_Element.Set
-              (C_Identifier_Prefixes, +Atts.Get_Value (J));
+            elsif Attribute_Name = "c:identifier-prefixes" then
+               Handler.Current_Element.Set
+                 (C_Identifier_Prefixes, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "c:prefix" then
-            Handler.Current_Element.Set (C_Prefix, +Atts.Get_Value (J));
+            elsif Attribute_Name = "c:prefix" then
+               Handler.Current_Element.Set (C_Prefix, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "c:symbol-prefix" then
-            Handler.Current_Element.Set (C_Symbol_Prefix, +Atts.Get_Value (J));
+            elsif Attribute_Name = "c:symbol-prefix" then
+               Handler.Current_Element.Set
+                 (C_Symbol_Prefix, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "c:symbol-prefixes" then
-            Handler.Current_Element.Set
-              (C_Symbol_Prefixes, +Atts.Get_Value (J));
+            elsif Attribute_Name = "c:symbol-prefixes" then
+               Handler.Current_Element.Set
+                 (C_Symbol_Prefixes, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "c:type" then
-            Handler.Current_Element.Set (C_Type, +Atts.Get_Value (J));
+            elsif Attribute_Name = "c:type" then
+               Handler.Current_Element.Set (C_Type, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "column" then
-            Handler.Current_Element.Set (Column, +Atts.Get_Value (J));
+            elsif Attribute_Name = "column" then
+               Handler.Current_Element.Set (Column, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "copy-function" then
-            Handler.Current_Element.Set (Copy_Function, +Atts.Get_Value (J));
+            elsif Attribute_Name = "copy-function" then
+               Handler.Current_Element.Set (Copy_Function, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "default-value" then
-            Handler.Current_Element.Set (Default_Value, +Atts.Get_Value (J));
+            elsif Attribute_Name = "default-value" then
+               Handler.Current_Element.Set (Default_Value, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "deprecated-version" then
-            Handler.Current_Element.Set
-              (Deprecated_Version, +Atts.Get_Value (J));
+            elsif Attribute_Name = "deprecated-version" then
+               Handler.Current_Element.Set
+                 (Deprecated_Version, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "emitter" then
-            Handler.Current_Element.Set (Emitter, +Atts.Get_Value (J));
+            elsif Attribute_Name = "emitter" then
+               Handler.Current_Element.Set (Emitter, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "filename" then
-            Handler.Current_Element.Set (Filename, +Atts.Get_Value (J));
+            elsif Attribute_Name = "filename" then
+               Handler.Current_Element.Set (Filename, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "free-function" then
-            Handler.Current_Element.Set (Free_Function, +Atts.Get_Value (J));
+            elsif Attribute_Name = "free-function" then
+               Handler.Current_Element.Set (Free_Function, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "getter" then
-            Handler.Current_Element.Set (Getter, +Atts.Get_Value (J));
+            elsif Attribute_Name = "getter" then
+               Handler.Current_Element.Set (Getter, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "glib:async-func" then
-            Handler.Current_Element.Set (Glib_Async_Func, +Atts.Get_Value (J));
+            elsif Attribute_Name = "glib:async-func" then
+               Handler.Current_Element.Set
+                 (Glib_Async_Func, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "glib:error-domain" then
-            Handler.Current_Element.Set
-              (Glib_Error_Domain, +Atts.Get_Value (J));
+            elsif Attribute_Name = "glib:error-domain" then
+               Handler.Current_Element.Set
+                 (Glib_Error_Domain, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "glib:finish-func" then
-            Handler.Current_Element.Set
-              (Glib_Finish_Func, +Atts.Get_Value (J));
+            elsif Attribute_Name = "glib:finish-func" then
+               Handler.Current_Element.Set
+                 (Glib_Finish_Func, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "glib:get-property" then
-            Handler.Current_Element.Set
-              (Glib_Get_Property, +Atts.Get_Value (J));
+            elsif Attribute_Name = "glib:get-property" then
+               Handler.Current_Element.Set
+                 (Glib_Get_Property, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "glib:get-type" then
-            Handler.Current_Element.Set (Glib_Get_Type, +Atts.Get_Value (J));
+            elsif Attribute_Name = "glib:get-type" then
+               Handler.Current_Element.Set (Glib_Get_Type, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "glib:get-value-func" then
-            Handler.Current_Element.Set
-              (Glib_Get_Value_Func, +Atts.Get_Value (J));
+            elsif Attribute_Name = "glib:get-value-func" then
+               Handler.Current_Element.Set
+                 (Glib_Get_Value_Func, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "glib:is-gtype-struct-for" then
-            Handler.Current_Element.Set
-              (Glib_Is_Gtype_Struct_For, +Atts.Get_Value (J));
+            elsif Attribute_Name = "glib:is-gtype-struct-for" then
+               Handler.Current_Element.Set
+                 (Glib_Is_Gtype_Struct_For, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "glib:name" then
-            Handler.Current_Element.Set (Glib_Name, +Atts.Get_Value (J));
+            elsif Attribute_Name = "glib:name" then
+               Handler.Current_Element.Set (Glib_Name, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "glib:nick" then
-            Handler.Current_Element.Set (Glib_Nick, +Atts.Get_Value (J));
+            elsif Attribute_Name = "glib:nick" then
+               Handler.Current_Element.Set (Glib_Nick, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "glib:ref-func" then
-            Handler.Current_Element.Set (Glib_Ref_Func, +Atts.Get_Value (J));
+            elsif Attribute_Name = "glib:ref-func" then
+               Handler.Current_Element.Set (Glib_Ref_Func, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "glib:set-property" then
-            Handler.Current_Element.Set
-              (Glib_Set_Property, +Atts.Get_Value (J));
+            elsif Attribute_Name = "glib:set-property" then
+               Handler.Current_Element.Set
+                 (Glib_Set_Property, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "glib:set-value-func" then
-            Handler.Current_Element.Set
-              (Glib_Set_Value_Func, +Atts.Get_Value (J));
+            elsif Attribute_Name = "glib:set-value-func" then
+               Handler.Current_Element.Set
+                 (Glib_Set_Value_Func, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "glib:sync-func" then
-            Handler.Current_Element.Set (Glib_Sync_Func, +Atts.Get_Value (J));
+            elsif Attribute_Name = "glib:sync-func" then
+               Handler.Current_Element.Set
+                 (Glib_Sync_Func, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "glib:type-name" then
-            Handler.Current_Element.Set (Glib_Type_Name, +Atts.Get_Value (J));
+            elsif Attribute_Name = "glib:type-name" then
+               Handler.Current_Element.Set
+                 (Glib_Type_Name, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "glib:type-struct" then
-            Handler.Current_Element.Set
-              (Glib_Type_Struct, +Atts.Get_Value (J));
+            elsif Attribute_Name = "glib:type-struct" then
+               Handler.Current_Element.Set
+                 (Glib_Type_Struct, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "glib:unref-func" then
-            Handler.Current_Element.Set (Glib_Unref_Func, +Atts.Get_Value (J));
+            elsif Attribute_Name = "glib:unref-func" then
+               Handler.Current_Element.Set
+                 (Glib_Unref_Func, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "invoker" then
-            Handler.Current_Element.Set (Invoker, +Atts.Get_Value (J));
+            elsif Attribute_Name = "invoker" then
+               Handler.Current_Element.Set (Invoker, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "line" then
-            Handler.Current_Element.Set (Line, +Atts.Get_Value (J));
+            elsif Attribute_Name = "line" then
+               Handler.Current_Element.Set (Line, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "moved-to" then
-            Handler.Current_Element.Set (Moved_To, +Atts.Get_Value (J));
+            elsif Attribute_Name = "moved-to" then
+               Handler.Current_Element.Set (Moved_To, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "name" then
-            Handler.Current_Element.Set (Name, +Atts.Get_Value (J));
+            elsif Attribute_Name = "name" then
+               Handler.Current_Element.Set (Name, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "parent" then
-            Handler.Current_Element.Set (Parent, +Atts.Get_Value (J));
+            elsif Attribute_Name = "parent" then
+               Handler.Current_Element.Set (Parent, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "setter" then
-            Handler.Current_Element.Set (Setter, +Atts.Get_Value (J));
+            elsif Attribute_Name = "setter" then
+               Handler.Current_Element.Set (Setter, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "shadowed-by" then
-            Handler.Current_Element.Set (Shadowed_By, +Atts.Get_Value (J));
+            elsif Attribute_Name = "shadowed-by" then
+               Handler.Current_Element.Set (Shadowed_By, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "shadows" then
-            Handler.Current_Element.Set (Shadows, +Atts.Get_Value (J));
+            elsif Attribute_Name = "shadows" then
+               Handler.Current_Element.Set (Shadows, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "shared-library" then
-            Handler.Current_Element.Set (Shared_Library, +Atts.Get_Value (J));
+            elsif Attribute_Name = "shared-library" then
+               Handler.Current_Element.Set
+                 (Shared_Library, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "stability" then
-            Handler.Current_Element.Set (Stability, +Atts.Get_Value (J));
+            elsif Attribute_Name = "stability" then
+               Handler.Current_Element.Set (Stability, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "value" then
-            Handler.Current_Element.Set (Value, +Atts.Get_Value (J));
+            elsif Attribute_Name = "value" then
+               Handler.Current_Element.Set (Value, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "version" then
-            Handler.Current_Element.Set (Version, +Atts.Get_Value (J));
+            elsif Attribute_Name = "version" then
+               Handler.Current_Element.Set (Version, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "xml:space" then
-            Handler.Current_Element.Set
-              (Preserve_Xml_Space, +Atts.Get_Value (J));
+            elsif Attribute_Name = "xml:space" then
+               Handler.Current_Element.Set
+                 (Preserve_Xml_Space, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "xml:whitespace" then
-            Handler.Current_Element.Set
-              (Preserve_Xml_Whitespace, +Atts.Get_Value (J));
+            elsif Attribute_Name = "xml:whitespace" then
+               Handler.Current_Element.Set
+                 (Preserve_Xml_Whitespace, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "xmlns" then
-            Handler.Current_Element.Set (Xmlns, +Atts.Get_Value (J));
+            elsif Attribute_Name = "xmlns" then
+               Handler.Current_Element.Set (Xmlns, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "xmlns:c" then
-            Handler.Current_Element.Set (Xmlns_C, +Atts.Get_Value (J));
+            elsif Attribute_Name = "xmlns:c" then
+               Handler.Current_Element.Set (Xmlns_C, Atts.Get_Value (J));
 
-         elsif Attribute_Name = "xmlns:glib" then
-            Handler.Current_Element.Set (Xmlns_Glib, +Atts.Get_Value (J));
+            elsif Attribute_Name = "xmlns:glib" then
+               Handler.Current_Element.Set (Xmlns_Glib, Atts.Get_Value (J));
 
-         else
-            Log_Warning ("Unknown attribute: " & (+Attribute_Name));
-         end if;
-
+            else
+               Log_Warning ("Unknown attribute: " & (Attribute_Name));
+            end if;
+         end ONE_ATTRIBUTE;
       end loop;
    end Get_Attributes;
 
