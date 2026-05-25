@@ -213,6 +213,16 @@ package Gir_Reader.Elements is
       Value : Text)
    with Post'Class => Self.Contains (Item);
 
+   --  Set the value of the requested text key for the element.
+   --  @param Self The element.
+   --  @param Item A text key.
+   --  @param Value The value for the key as an UTF8 encoded String.
+   procedure Set
+     (Self  : in out Element;
+      Item  : Gir_Reader.Key_Types.Text_Key;
+      Value : Utf8)
+   with Post'Class => Self.Contains (Item);
+
    --  Set the value of the requested sub-element key for the element.
    --  Note: sub-elements are always of type 'List'.
    --  @param Self The element.

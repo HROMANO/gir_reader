@@ -533,6 +533,19 @@ package body Gir_Reader.Elements is
 
    procedure Set
      (Self  : in out Element;
+      Item  : Gir_Reader.Key_Types.Text_Key;
+      Value : Utf8)
+   is
+   begin
+      Self.Set (Item, +Value);
+   end Set;
+
+   ---------
+   -- Set --
+   ---------
+
+   procedure Set
+     (Self  : in out Element;
       Item  : Gir_Reader.Key_Types.Element_Key;
       Value : Gir_Reader.Element_Lists.List)
    is
