@@ -6,7 +6,7 @@ package body Gir_Reader is
    --  "-"  --
    -----------
 
-   function "-" (Message : String) return Utf8
+   function tr (Message : String) return Utf8
    is (Gettexts.Get_Text_With_Domain
        (Domain_Name => "gir_reader", Message_Id => Message));
 
@@ -18,13 +18,13 @@ package body Gir_Reader is
    begin
       case Item is
          when Gir_Reader.Is_In =>
-            return -"in";
+            return tr ("in");
 
          when Gir_Reader.Is_Out =>
-            return -"out";
+            return tr ("out");
 
          when Gir_Reader.Is_In_Out =>
-            return -"in out";
+            return tr ("in out");
       end case;
    end To_String;
 
@@ -47,16 +47,16 @@ package body Gir_Reader is
    begin
       case Item is
          when Gir_Reader.Notified =>
-            return -"notified";
+            return tr ("notified");
 
          when Gir_Reader.Async =>
-            return -"async";
+            return tr ("async");
 
          when Gir_Reader.Call =>
-            return -"call";
+            return tr ("call");
 
          when Gir_Reader.Forever =>
-            return -"forever";
+            return tr ("forever");
       end case;
    end To_String;
 
@@ -79,13 +79,13 @@ package body Gir_Reader is
    begin
       case Item is
          when Gir_Reader.None =>
-            return -"none";
+            return tr ("none");
 
          when Gir_Reader.Container =>
-            return -"container";
+            return tr ("container");
 
          when Gir_Reader.Full =>
-            return -"full";
+            return tr ("full");
       end case;
    end To_String;
 
@@ -108,13 +108,13 @@ package body Gir_Reader is
    begin
       case Item is
          when Gir_Reader.First =>
-            return -"first";
+            return tr ("first");
 
          when Gir_Reader.Last =>
-            return -"last";
+            return tr ("last");
 
          when Gir_Reader.Cleanup =>
-            return -"cleanup";
+            return tr ("cleanup");
       end case;
    end To_String;
 

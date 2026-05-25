@@ -7,7 +7,7 @@ package body Gir_Reader.Images is
    ---------------
 
    function To_String (Item : Boolean) return Utf8
-   is (if Item then -"true" else -"false");
+   is (if Item then tr ("true") else tr ("false"));
 
    -------------
    --  Image  --

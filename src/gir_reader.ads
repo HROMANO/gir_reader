@@ -63,7 +63,7 @@ package Gir_Reader is
    --  @param Message An Ada string to translate.
    --  @return The translated string.
    --  function "-" (Message : String) return Utf8 renames Gettexts.Get_Text;
-   function "-" (Message : String) return Utf8;
+   function tr (Message : String) return Utf8;
 
    --------------------------------------------------------------------------
    --  Specific enumerations types:                                        --
