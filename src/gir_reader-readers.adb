@@ -786,7 +786,8 @@ package body Gir_Reader.Readers is
       end if;
 
       if Handler.Current_Value /= Empty_Text then
-         Handler.Current_Element.Set (Content, Handler.Current_Value);
+         Handler.Current_Element.Set
+           (Content, Ada.Strings.Unbounded.To_String (Handler.Current_Value));
          Handler.Current_Value := Empty_Text;
       end if;
 

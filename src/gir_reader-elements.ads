@@ -127,6 +127,16 @@ package Gir_Reader.Elements is
      (Self : Element; Item : Gir_Reader.Key_Types.Text_Key; Default : Text)
       return Text;
 
+   --  Get the requested text key of the element or the provided default
+   --  value if Self doesn't contain the key.
+   --  @param Self The element.
+   --  @param Item A text key.
+   --  @param Default Default return value.
+   --  @return The value of the key or the default value.
+   function Get_Or_Else
+     (Self : Element; Item : Gir_Reader.Key_Types.Text_Key; Default : Utf8)
+      return Utf8;
+
    --  Get the requested sub-element key of the element or the provided default
    --  value if Self doesn't contain the key.
    --  @param Self The element.
@@ -201,16 +211,6 @@ package Gir_Reader.Elements is
      (Self  : in out Element;
       Item  : Gir_Reader.Key_Types.Signal_Emission_Key;
       Value : Signal_Emission)
-   with Post'Class => Self.Contains (Item);
-
-   --  Set the value of the requested text key for the element.
-   --  @param Self The element.
-   --  @param Item A text key.
-   --  @param Value The value for the key.
-   procedure Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Text_Key;
-      Value : Text)
    with Post'Class => Self.Contains (Item);
 
    --  Set the value of the requested text key for the element.

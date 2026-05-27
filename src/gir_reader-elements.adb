@@ -118,15 +118,15 @@ package body Gir_Reader.Elements is
    --  Text type
    --
 
-   type Text_Data is new Holder_Content_Root with record
-      Value : Text;
+   type Text_Data (Length : Natural) is new Holder_Content_Root with record
+      Value : Utf8 (1 .. Length);
    end record;
 
    procedure Image
      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
       Item   : Text_Data) is
    begin
-      Gir_Reader.Images.Image (Output, Item.Value);
+      Output.Put (Item.Value);
    end Image;
 
    --
@@ -380,6 +380,13 @@ package body Gir_Reader.Elements is
      (Self : Element; Item : Gir_Reader.Key_Types.Text_Key; Default : Text)
       return Text
    is (if Self.Contains (Item)
+       then +Text_Data (Internal_Get (Self, Item)).Value
+       else Default);
+
+   function Get_Or_Else
+     (Self : Element; Item : Gir_Reader.Key_Types.Text_Key; Default : Utf8)
+      return Utf8
+   is (if Self.Contains (Item)
        then Text_Data (Internal_Get (Self, Item)).Value
        else Default);
 
@@ -519,25 +526,11 @@ package body Gir_Reader.Elements is
    procedure Set
      (Self  : in out Element;
       Item  : Gir_Reader.Key_Types.Text_Key;
-      Value : Text)
-   is
-      Value_Record : Text_Data;
-   begin
-      Value_Record.Value := Value;
-      Internal_Set (Self, Item, Value_Record);
-   end Set;
-
-   ---------
-   -- Set --
-   ---------
-
-   procedure Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Text_Key;
       Value : Utf8)
    is
+      Value_Record : Text_Data := (Length => Value'Length, Value => Value);
    begin
-      Self.Set (Item, +Value);
+      Internal_Set (Self, Item, Value_Record);
    end Set;
 
    ---------
