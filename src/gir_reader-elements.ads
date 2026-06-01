@@ -124,16 +124,6 @@ package Gir_Reader.Elements is
    --  @param Default Default return value.
    --  @return The value of the key or the default value.
    function Get_Or_Else
-     (Self : Element; Item : Gir_Reader.Key_Types.Text_Key; Default : Text)
-      return Text;
-
-   --  Get the requested text key of the element or the provided default
-   --  value if Self doesn't contain the key.
-   --  @param Self The element.
-   --  @param Item A text key.
-   --  @param Default Default return value.
-   --  @return The value of the key or the default value.
-   function Get_Or_Else
      (Self : Element; Item : Gir_Reader.Key_Types.Text_Key; Default : Utf8)
       return Utf8;
 
@@ -261,8 +251,7 @@ package Gir_Reader.Elements is
       return Gir_Reader.Element_Lists.List;
 
    function "/"
-     (Left : Element; Right : Gir_Reader.Key_Types.Element_Key)
-      return Element;
+     (Left : Element; Right : Gir_Reader.Key_Types.Element_Key) return Element;
 
 private
 

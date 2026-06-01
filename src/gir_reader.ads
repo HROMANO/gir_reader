@@ -27,32 +27,16 @@ package Gir_Reader is
    --  In case of implementation changes  --
    -----------------------------------------
 
-   --  The Text type is used for all strings in the library.
-   subtype Text is Ada.Strings.Unbounded.Unbounded_String;
-
-   Empty_Text renames Ada.Strings.Unbounded.Null_Unbounded_String;
-
-   function Get_Length (Item : Text) return Natural
-   renames Ada.Strings.Unbounded.Length;
-
-   procedure Insert
-     (Source : in out Text; Before : Positive; New_Item : String)
-   renames Ada.Strings.Unbounded.Insert;
-
-   function Get_Index
-     (Source : Text; Pattern : String; From : Positive) return Natural
-   is (Ada.Strings.Unbounded.Index (Source, Pattern, From));
-
    --  The usual function to convert from Ada String to Text.
    --  @param Source An Ada String.
    --  @return The String converted to Text type.
-   function "+" (Source : String) return Text
+   function "+" (Source : String) return Ada.Strings.Unbounded.Unbounded_String
    renames Ada.Strings.Unbounded.To_Unbounded_String;
 
    --  The usual function to convert from Text to Ada String.
    --  @param Source A Text type string.
    --  @return Source converted to an Ada String type.
-   function "+" (Source : Text) return String
+   function "+" (Source : Ada.Strings.Unbounded.Unbounded_String) return String
    renames Ada.Strings.Unbounded.To_String;
 
    -----------------------------

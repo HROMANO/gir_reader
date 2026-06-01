@@ -29,12 +29,14 @@ package Gir_Reader.Attribute_Maps is
    --  @param Item The requested key.
    --  @return True if the key exists in the attribute map.
    function Contains
-     (Self : Attribute_Map; Item : Gir_Reader.Key_Types.Attribute_Key'Class) return Boolean;
+     (Self : Attribute_Map; Item : Gir_Reader.Key_Types.Attribute_Key'Class)
+      return Boolean;
 
    --  Get attribute keys of the attribute map.
    --  @param Self The attribute map.
    --  @return The .
-   function Get_Attribute_Keys (Self : Attribute_Map) return Gir_Reader.Key_Lists.Attribute_Key_List;
+   function Get_Attribute_Keys
+     (Self : Attribute_Map) return Gir_Reader.Key_Lists.Attribute_Key_List;
 
    ------------------
    --  Get methods --
@@ -113,8 +115,9 @@ package Gir_Reader.Attribute_Maps is
    --  @param Default Default return value.
    --  @return The value of the key or the default value.
    function Get_Or_Else
-     (Self : Attribute_Map; Item : Gir_Reader.Key_Types.Text_Key; Default : Text)
-      return Text;
+     (Self    : Attribute_Map;
+      Item    : Gir_Reader.Key_Types.Text_Key;
+      Default : Utf8) return Utf8;
 
    ------------------
    --  Set methods --
@@ -187,7 +190,7 @@ package Gir_Reader.Attribute_Maps is
    procedure Set
      (Self  : in out Attribute_Map;
       Item  : Gir_Reader.Key_Types.Text_Key;
-      Value : Text)
+      Value : Utf8)
    with Post'Class => Self.Contains (Item);
 
    --------------
@@ -198,8 +201,8 @@ package Gir_Reader.Attribute_Maps is
    --  @param Self the attribute map.
    --  @param Item An attribute key.
    procedure Unset
-     (Self  : in out Attribute_Map;
-      Item  : Gir_Reader.Key_Types.Attribute_Key'Class)
+     (Self : in out Attribute_Map;
+      Item : Gir_Reader.Key_Types.Attribute_Key'Class)
    with Post'Class => not Self.Contains (Item);
 
    --  Custom procedure to display an attribute map.
@@ -215,6 +218,7 @@ private
    --  of the package.
    --  A 'Put_Image' aspect is used to have a readable and translatable display
    --  output.
-   type Attribute_Map is new Holders.Holder with null record with Put_Image => Image;
+   type Attribute_Map is new Holders.Holder with null record
+   with Put_Image => Image;
 
 end Gir_Reader.Attribute_Maps;

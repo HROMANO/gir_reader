@@ -43,31 +43,32 @@ package body Gir_Reader.Images is
    ---------------
 
    function To_String
-     (Item : Text; Indent : Utf8 := ""; Indent_First_Line : Boolean := False)
-      return Utf8
+     (Item              : Ada.Strings.Unbounded.Unbounded_String;
+      Indent            : Utf8 := "";
+      Indent_First_Line : Boolean := False) return Utf8
    is
-      Result  : Text := Item;
+      Result  : Ada.Strings.Unbounded.Unbounded_String := Item;
       Start   : Positive := 1;
       Index   : Natural := 0;
       Pattern : String := "" & ASCII.LF;
    begin
 
-      if Get_Length (Item) = 0 then
+      if Ada.Strings.Unbounded.Length (Item) = 0 then
          return "";
       end if;
 
       if Indent_First_Line then
-         Insert (Result, 1, Indent);
+         Ada.Strings.Unbounded.Insert (Result, 1, Indent);
       end if;
 
       while True loop
 
-         Index := Get_Index (Result, Pattern, Start);
+         Index := Ada.Strings.Unbounded.Index (Result, Pattern, Start);
 
          exit when Index = 0;
 
          Start := Index + 1;
-         Insert (Result, Start, Indent);
+         Ada.Strings.Unbounded.Insert (Result, Start, Indent);
 
       end loop;
 
@@ -81,7 +82,7 @@ package body Gir_Reader.Images is
 
    procedure Image
      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
-      Item   : Text)
+      Item   : Ada.Strings.Unbounded.Unbounded_String)
    is
 
       use Ada.Strings.Fixed;

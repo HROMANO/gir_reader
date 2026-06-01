@@ -15,7 +15,7 @@ package body Gir_Reader.Readers is
    use Gir_Reader.Key_Types;
    use Gir_Reader.Keys;
    use type Ada.Containers.Count_Type;
-   use type Gir_Reader.Text;
+   use type Ada.Strings.Unbounded.Unbounded_String;
 
    --  @private Internal use.
    --  A vector of keys.
@@ -29,7 +29,7 @@ package body Gir_Reader.Readers is
    --
 
    type Reader is new Sax.Readers.Reader with record
-      Current_Value                 : Text;
+      Current_Value                 : Ada.Strings.Unbounded.Unbounded_String;
       Current_Key_List              : Key_Vectors.Vector;
       Current_Element               : Gir_Reader.Elements.Element;
       Current_Element_List          : Gir_Reader.Element_Lists.List;
@@ -49,7 +49,8 @@ package body Gir_Reader.Readers is
       Qname         : Unicode.CES.Byte_Sequence := "";
       Atts          : Sax.Attributes.Attributes'Class)
    with
-     Pre  => Handler.Current_Value = Empty_Text,
+     Pre  =>
+       Handler.Current_Value = Ada.Strings.Unbounded.Null_Unbounded_String,
      Post =>
        Handler.Current_Element_List.Length
        = Handler'Old.Current_Key_List.Length + 1
@@ -81,7 +82,7 @@ package body Gir_Reader.Readers is
        and then
          Handler.Current_Element_List.Length = Handler.Current_Key_List.Length,
      Post =>
-       Handler.Current_Value = Empty_Text
+       Handler.Current_Value = Ada.Strings.Unbounded.Null_Unbounded_String
        and then
          (Handler.Current_Key_List.Length
           = Handler'Old.Current_Key_List.Length - 1
@@ -785,10 +786,11 @@ package body Gir_Reader.Readers is
          return;
       end if;
 
-      if Handler.Current_Value /= Empty_Text then
+      if Handler.Current_Value /= Ada.Strings.Unbounded.Null_Unbounded_String
+      then
          Handler.Current_Element.Set
            (Content, Ada.Strings.Unbounded.To_String (Handler.Current_Value));
-         Handler.Current_Value := Empty_Text;
+         Handler.Current_Value := Ada.Strings.Unbounded.Null_Unbounded_String;
       end if;
 
       if Handler.Current_Element_List.Is_Empty then

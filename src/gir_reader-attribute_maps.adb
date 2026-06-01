@@ -103,24 +103,25 @@ package body Gir_Reader.Attribute_Maps is
    --  Text type
    --
 
-   type Text_Data is new Holder_Content_Root with record
-      Value : Text;
+   type Text_Data (Length : Natural) is new Holder_Content_Root with record
+      Value : Utf8 (1 .. Length);
    end record;
 
    procedure Image
      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
       Item   : Text_Data) is
    begin
-      Gir_Reader.Images.Image (Output, Item.Value);
+      --  TODO: Implement Image for Utf8 instead of Text
+      Gir_Reader.Images.Image (Output, +Item.Value);
    end Image;
 
    --
    --  Internal_Attribute_Maps package
    --
 
-   function Less_Than (Left, Right : Gir_Reader.Key_Types.Attribute_Key)
-   return Boolean is
-      (Gir_Reader.Key_Types.Less_Than (Left, Right));
+   function Less_Than
+     (Left, Right : Gir_Reader.Key_Types.Attribute_Key) return Boolean
+   is (Gir_Reader.Key_Types.Less_Than (Left, Right));
 
    package Internal_Attribute_Maps is new
      Ada.Containers.Indefinite_Ordered_Maps
@@ -132,7 +133,9 @@ package body Gir_Reader.Attribute_Maps is
    --  Real_Attribute_Map type
    --
 
-   type Real_Attribute_Map is new Internal_Attribute_Maps.Map and Holder_Content_Root
+   type Real_Attribute_Map is
+     new Internal_Attribute_Maps.Map
+     and Holder_Content_Root
    with null record;
 
    procedure Image
@@ -184,7 +187,9 @@ package body Gir_Reader.Attribute_Maps is
 
             end if;
 
-            if Internal_Attribute_Maps.Next (Index) /= Internal_Attribute_Maps.No_Element then
+            if Internal_Attribute_Maps.Next (Index)
+              /= Internal_Attribute_Maps.No_Element
+            then
                Output.Put (",");
                Output.New_Line;
             end if;
@@ -236,7 +241,8 @@ package body Gir_Reader.Attribute_Maps is
    --------------
 
    function Contains
-     (Self : Attribute_Map; Item : Gir_Reader.Key_Types.Attribute_Key'Class) return Boolean is
+     (Self : Attribute_Map; Item : Gir_Reader.Key_Types.Attribute_Key'Class)
+      return Boolean is
    begin
       if Self.Is_Empty then
          return False;
@@ -250,12 +256,15 @@ package body Gir_Reader.Attribute_Maps is
    ------------------------
 
    function Get_Attribute_Keys
-     (Self : Attribute_Map) return Gir_Reader.Key_Lists.Attribute_Key_List
-   is
+     (Self : Attribute_Map) return Gir_Reader.Key_Lists.Attribute_Key_List is
    begin
       return List : Gir_Reader.Key_Lists.Attribute_Key_List do
-         for C in Real_Attribute_Map (Self.Constant_Reference.Element.all).Iterate loop
-            List.Append (Gir_Reader.Key_Types.Attribute_Key (Internal_Attribute_Maps.Key (C)));
+         for C in
+           Real_Attribute_Map (Self.Constant_Reference.Element.all).Iterate
+         loop
+            List.Append
+              (Gir_Reader.Key_Types.Attribute_Key
+                 (Internal_Attribute_Maps.Key (C)));
          end loop;
       end return;
    end Get_Attribute_Keys;
@@ -347,8 +356,9 @@ package body Gir_Reader.Attribute_Maps is
    -----------------
 
    function Get_Or_Else
-     (Self : Attribute_Map; Item : Gir_Reader.Key_Types.Text_Key; Default : Text)
-      return Text
+     (Self    : Attribute_Map;
+      Item    : Gir_Reader.Key_Types.Text_Key;
+      Default : Utf8) return Utf8
    is (if Self.Contains (Item)
        then Text_Data (Internal_Get (Self, Item)).Value
        else Default);
@@ -476,17 +486,16 @@ package body Gir_Reader.Attribute_Maps is
    procedure Set
      (Self  : in out Attribute_Map;
       Item  : Gir_Reader.Key_Types.Text_Key;
-      Value : Text)
+      Value : Utf8)
    is
-      Value_Record : Text_Data;
+      Value_Record : Text_Data := (Length => Value'Length, Value => Value);
    begin
-      Value_Record.Value := Value;
       Internal_Set (Self, Item, Value_Record);
    end Set;
 
    procedure Unset
-     (Self  : in out Attribute_Map;
-      Item  : Gir_Reader.Key_Types.Attribute_Key'Class) is
+     (Self : in out Attribute_Map;
+      Item : Gir_Reader.Key_Types.Attribute_Key'Class) is
    begin
       Real_Attribute_Map (Self.Reference.Element.all).Delete (Item);
    end Unset;
