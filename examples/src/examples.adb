@@ -13,6 +13,9 @@ with Gir_Reader.Readers;
 
 procedure Examples is
 
+   use type Gir_Reader.Element_Lists.List;
+   use type Gir_Reader.Elements.Element;
+
    package TIO renames Ada.Text_IO;
    package String_Vectors is new
      Ada.Containers.Indefinite_Vectors
@@ -24,6 +27,7 @@ procedure Examples is
    Gir        : Gir_Reader.Elements.Element;
    Repository : Gir_Reader.Elements.Element;
    Namespace  : Gir_Reader.Elements.Element;
+   Functions  : Gir_Reader.Element_Lists.List;
    Gir_Files  : constant String_List :=
      ["Atk-1.0.gir",
       "cairo-1.0.gir",
@@ -70,9 +74,9 @@ procedure Examples is
 begin
 
    TIO.Put_Line (Test'Image);
-   Test.Set (Gir_Reader.Keys.C_Identifier, Gir_Reader."+" ("Toto"));
+   Test.Set (Gir_Reader.Keys.C_Identifier, "Toto");
    TIO.Put_Line (Test'Image);
-   Test.Set (Gir_Reader.Keys.C_Identifier, Gir_Reader."+" ("Tutu"));
+   Test.Set (Gir_Reader.Keys.C_Identifier, "Tutu");
    TIO.Put_Line (Test'Image);
    Test.Set (Gir_Reader.Keys.Length, 10);
    TIO.Put_Line (Test'Image);
@@ -97,7 +101,7 @@ begin
    FILES : for File_Name of Gir_Files loop
 
       TIO.Put_Line ("Reading " & File_Name);
-      Gir := Gir_Reader.Readers.Read ("share/examples/" & File_Name);
+      Gir := Gir_Reader.Readers.Read ("share/examples/gir-files-gtkrs/" & File_Name);
 
       if Gir.Contains (Gir_Reader.Keys.Repository) then
          --  Only one repository in GIR files.
@@ -132,8 +136,18 @@ begin
 
    end loop FILES;
 
-   Gir := Gir_Reader.Readers.Read ("share/examples/" & Gir_Files (8));
-   TIO.Put_Line (Gir'Image);
+   Gir := Gir_Reader.Readers.Read ("share/examples/" & Gir_Files (20));
+   --  TIO.Put_Line (Gir'Image);
+
+   Repository := Gir / Gir_Reader.Keys.Repository / 1;
+   Namespace := Repository / Gir_Reader.Keys.Namespace;
+   Functions :=
+     Gir
+     / Gir_Reader.Keys.Repository
+     / Gir_Reader.Keys.Namespace
+     / Gir_Reader.Keys.Function_Element;
+   TIO.New_Line (5);
+   TIO.Put_Line (Functions'Image);
 
 exception
    when Ada.IO_Exceptions.Device_Error =>

@@ -111,8 +111,7 @@ package body Gir_Reader.Attribute_Maps is
      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
       Item   : Text_Data) is
    begin
-      --  TODO: Implement Image for Utf8 instead of Text
-      Gir_Reader.Images.Image (Output, +Item.Value);
+      Gir_Reader.Images.Image (Output, Item.Value);
    end Image;
 
    --
@@ -398,9 +397,8 @@ package body Gir_Reader.Attribute_Maps is
       Item  : Gir_Reader.Key_Types.Boolean_Key;
       Value : Boolean)
    is
-      Value_Record : Boolean_Data;
+      Value_Record : Boolean_Data := (Value => Value);
    begin
-      Value_Record.Value := Value;
       Internal_Set (Self, Item, Value_Record);
    end Set;
 
@@ -413,9 +411,8 @@ package body Gir_Reader.Attribute_Maps is
       Item  : Gir_Reader.Key_Types.Parameter_Direction_Key;
       Value : Parameter_Direction)
    is
-      Value_Record : Parameter_Direction_Data;
+      Value_Record : Parameter_Direction_Data := (Value => Value);
    begin
-      Value_Record.Value := Value;
       Internal_Set (Self, Item, Value_Record);
    end Set;
 
@@ -428,9 +425,8 @@ package body Gir_Reader.Attribute_Maps is
       Item  : Gir_Reader.Key_Types.Integer_Key;
       Value : Integer)
    is
-      Value_Record : Integer_Data;
+      Value_Record : Integer_Data := (Value => Value);
    begin
-      Value_Record.Value := Value;
       Internal_Set (Self, Item, Value_Record);
    end Set;
 
@@ -443,9 +439,8 @@ package body Gir_Reader.Attribute_Maps is
       Item  : Gir_Reader.Key_Types.Lifetime_Scope_Key;
       Value : Lifetime_Scope)
    is
-      Value_Record : Lifetime_Scope_Data;
+      Value_Record : Lifetime_Scope_Data := (Value => Value);
    begin
-      Value_Record.Value := Value;
       Internal_Set (Self, Item, Value_Record);
    end Set;
 
@@ -458,9 +453,8 @@ package body Gir_Reader.Attribute_Maps is
       Item  : Gir_Reader.Key_Types.Ownership_Key;
       Value : Ownership)
    is
-      Value_Record : Ownership_Data;
+      Value_Record : Ownership_Data := (Value => Value);
    begin
-      Value_Record.Value := Value;
       Internal_Set (Self, Item, Value_Record);
    end Set;
 
@@ -473,9 +467,8 @@ package body Gir_Reader.Attribute_Maps is
       Item  : Gir_Reader.Key_Types.Signal_Emission_Key;
       Value : Signal_Emission)
    is
-      Value_Record : Signal_Emission_Data;
+      Value_Record : Signal_Emission_Data := (Value => Value);
    begin
-      Value_Record.Value := Value;
       Internal_Set (Self, Item, Value_Record);
    end Set;
 

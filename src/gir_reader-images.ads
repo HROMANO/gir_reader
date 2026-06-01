@@ -22,12 +22,12 @@ package Gir_Reader.Images is
       Item   : Integer);
 
    function To_String
-     (Item              : Ada.Strings.Unbounded.Unbounded_String;
+     (Item              : Utf8;
       Indent            : Utf8 := "";
       Indent_First_Line : Boolean := False) return Utf8;
 
    procedure Image
      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
-      Item   : Ada.Strings.Unbounded.Unbounded_String);
+      Item   : Utf8);
 
 end Gir_Reader.Images;

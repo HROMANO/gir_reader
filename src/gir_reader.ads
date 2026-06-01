@@ -22,23 +22,6 @@ package Gir_Reader is
 
    subtype Utf8 is Ada.Strings.UTF_Encoding.UTF_8_String;
 
-   -----------------------------------------
-   --  Internal string type               --
-   --  In case of implementation changes  --
-   -----------------------------------------
-
-   --  The usual function to convert from Ada String to Text.
-   --  @param Source An Ada String.
-   --  @return The String converted to Text type.
-   function "+" (Source : String) return Ada.Strings.Unbounded.Unbounded_String
-   renames Ada.Strings.Unbounded.To_Unbounded_String;
-
-   --  The usual function to convert from Text to Ada String.
-   --  @param Source A Text type string.
-   --  @return Source converted to an Ada String type.
-   function "+" (Source : Ada.Strings.Unbounded.Unbounded_String) return String
-   renames Ada.Strings.Unbounded.To_String;
-
    -----------------------------
    --  Translation functions  --
    -----------------------------

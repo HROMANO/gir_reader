@@ -126,8 +126,7 @@ package body Gir_Reader.Elements is
      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
       Item   : Text_Data) is
    begin
-      --  TODO: Implement Image for Utf8 instead of Text
-      Gir_Reader.Images.Image (Output, +Item.Value);
+      Gir_Reader.Images.Image (Output, Item.Value);
    end Image;
 
    --
