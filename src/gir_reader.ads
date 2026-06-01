@@ -12,7 +12,6 @@
 pragma Ada_2022;
 
 with Ada.Strings.Text_Buffers;
-with Ada.Strings.Unbounded;
 with Ada.Strings.UTF_Encoding;
 with Ada.Text_IO;
 

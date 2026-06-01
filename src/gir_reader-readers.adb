@@ -1,6 +1,8 @@
 with Ada.Containers;
 with Ada.Containers.Indefinite_Vectors;
 
+with Ada.Strings.Unbounded;
+
 with Input_Sources.File;
 with Sax.Attributes;
 with Sax.Readers;
