@@ -126,6 +126,8 @@ package Gir_Reader is
      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
       Item   : Signal_Emission);
 
+   Indent_Size : Ada.Strings.Text_Buffers.Text_Buffer_Count := 3;
+
 private
 
    --  Indefinite_Holders are used to hide implementation details to

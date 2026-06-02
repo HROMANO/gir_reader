@@ -1,7 +1,4 @@
-pragma Ada_2022;
-
 with Ada.Containers.Indefinite_Ordered_Maps;
-with Ada.Strings.Unbounded;
 
 with Gir_Reader.Attribute_Maps;
 with Gir_Reader.Element_Lists;
@@ -48,14 +45,14 @@ package body Gir_Reader.Elements is
    package Real_Elements is
 
       function Less_Than
-        (Left, Right : Gir_Reader.Key_Types.Element_Key'Class) return Boolean
+        (Left, Right : Gir_Reader.Key_Types.Element_Key) return Boolean
       is (Gir_Reader.Key_Types.Less_Than
             (Gir_Reader.Key_Types.Key (Left),
              Gir_Reader.Key_Types.Key (Right)));
 
       package Element_Maps is new
         Ada.Containers.Indefinite_Ordered_Maps
-          (Key_Type     => Gir_Reader.Key_Types.Element_Key'Class,
+          (Key_Type     => Gir_Reader.Key_Types.Element_Key,
            Element_Type => Holder_Content_Root'Class,
            "<"          => Less_Than);
 
@@ -77,15 +74,10 @@ package body Gir_Reader.Elements is
 
    package body Real_Elements is
 
-      use type Ada.Strings.Unbounded.Unbounded_String;
-
-      function Is_Empty (Item : Real_Element) return Boolean is
-      begin
-         return
-           Item.Sub_Elements.Is_Empty
-           and then Item.Attributes.Is_Empty
-           and then Item.Content = Ada.Strings.Unbounded.Null_Unbounded_String;
-      end Is_Empty;
+      function Is_Empty (Item : Real_Element) return Boolean
+      is (Item.Sub_Elements.Is_Empty
+          and then Item.Attributes.Is_Empty
+          and then Item.Content = Ada.Strings.Unbounded.Null_Unbounded_String);
 
       procedure Image
         (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
@@ -93,6 +85,7 @@ package body Gir_Reader.Elements is
       is
          use type Element_Maps.Cursor;
       begin
+
          if Item.Is_Empty then
             Output.Put ("()");
             return;
@@ -100,56 +93,61 @@ package body Gir_Reader.Elements is
 
          Output.Put ("(");
          Output.New_Line;
-         Output.Increase_Indent (3);
+         Output.Increase_Indent (Indent_Size);
 
          if not Item.Attributes.Is_Empty then
+
             Output.Put ("Attributes:");
             Output.New_Line;
-            Output.Increase_Indent (3);
+            Output.Increase_Indent (Indent_Size);
             Gir_Reader.Attribute_Maps.Image (Output, Item.Attributes);
-            Output.Decrease_Indent (3);
+            Output.Decrease_Indent (Indent_Size);
             Output.New_Line;
+
          end if;
 
          if Item.Content /= Ada.Strings.Unbounded.Null_Unbounded_String then
+
             Output.Put ("Content:");
             Output.New_Line;
-            Output.Increase_Indent (3);
+            Output.Increase_Indent (Indent_Size);
             Gir_Reader.Images.Image
               (Output, Ada.Strings.Unbounded.To_String (Item.Content));
-            Output.Decrease_Indent (3);
+            Output.Decrease_Indent (Indent_Size);
             Output.New_Line;
+
          end if;
 
-         if Item.Sub_Elements.Is_Empty then
-            Output.Decrease_Indent (3);
-            return;
+         if not Item.Sub_Elements.Is_Empty then
+
+            Output.Put ("Sub elements:");
+            Output.New_Line;
+            Output.Increase_Indent (Indent_Size);
+
+            for Index in Item.Sub_Elements.Iterate loop
+               declare
+                  Key  : Gir_Reader.Key_Types.Element_Key renames
+                    Element_Maps.Key (Index);
+                  Data : Holder_Content_Root'Class renames
+                    Item.Sub_Elements.Element (Key);
+               begin
+                  Gir_Reader.Key_Types.Image (Output, Key);
+                  Output.Put (": ");
+
+                  Image (Output, Vector_Data (Data));
+
+                  if Element_Maps.Next (Index) /= Element_Maps.No_Element then
+                     Output.Put (",");
+                     Output.New_Line;
+                  end if;
+               end;
+            end loop;
+
+            Output.Decrease_Indent (Indent_Size);
+
          end if;
 
-         Output.Put ("Sub elements:");
-         Output.New_Line;
-         Output.Increase_Indent (3);
-
-         for Index in Item.Sub_Elements.Iterate loop
-            declare
-               Key  : Gir_Reader.Key_Types.Element_Key'Class renames
-                 Element_Maps.Key (Index);
-               Data : Holder_Content_Root'Class renames
-                 Item.Sub_Elements.Element (Key);
-            begin
-               Gir_Reader.Key_Types.Image (Output, Key);
-               Output.Put (": ");
-
-               Image (Output, Vector_Data (Data));
-
-               if Element_Maps.Next (Index) /= Element_Maps.No_Element then
-                  Output.Put (",");
-                  Output.New_Line;
-               end if;
-            end;
-         end loop;
-
-         Output.Decrease_Indent (6);
+         Output.Decrease_Indent (Indent_Size);
          Output.New_Line;
          Output.Put (")");
 
@@ -163,17 +161,13 @@ package body Gir_Reader.Elements is
    -- Empty_Element --
    -------------------
 
-   function Empty_Element return Element is
-      Empty : Element;
-   begin
-      return Empty;
-   end Empty_Element;
+   function Empty_Element return Element
+   is ((Holders.Holder with others => <>));
 
    -----------
    -- Clear --
    -----------
 
-   overriding
    procedure Clear (Self : in out Element) is
    begin
       Holders.Holder (Self).Clear;
@@ -183,14 +177,16 @@ package body Gir_Reader.Elements is
    -- Is_Empty --
    --------------
 
-   overriding
    function Is_Empty (Self : Element) return Boolean is
    begin
+
       if Holders.Holder (Self).Is_Empty then
          return True;
+
+      else
+         return Real_Element (Self.Element).Is_Empty;
       end if;
 
-      return Real_Element (Self.Element).Is_Empty;
    end Is_Empty;
 
    --------------
@@ -198,51 +194,51 @@ package body Gir_Reader.Elements is
    --------------
 
    function Contains
-     (Self : Element; Item : Gir_Reader.Key_Types.Element_Key'Class)
-      return Boolean is
+     (Self : Element; Item : Gir_Reader.Key_Types.Element_Key) return Boolean
+   is
    begin
+
       if Self.Is_Empty then
          return False;
+
+      else
+         return Real_Element (Self.Element).Sub_Elements.Contains (Item);
       end if;
 
-      return Real_Element (Self.Element).Sub_Elements.Contains (Item);
    end Contains;
 
-   ------------------------------
-   -- Get_Sub_Element_Key_List --
-   ------------------------------
+   -------------------------------
+   -- Get_Sub_Elements_Key_List --
+   -------------------------------
 
-   function Get_Sub_Element_Key_List
+   function Get_Sub_Elements_Key_List
      (Self : Element) return Gir_Reader.Key_Lists.Element_Key_List
    is
       Result : Gir_Reader.Key_Lists.Element_Key_List;
    begin
+
       if Self.Is_Empty then
          return Result;
       end if;
 
       declare
-         Map : Real_Element renames Real_Element (Self.Element);
-      begin
-         for Iterator in Map.Sub_Elements.Iterate loop
-            declare
-               K : Gir_Reader.Key_Types.Element_Key'Class renames
-                 Real_Elements.Element_Maps.Key (Iterator);
-            begin
-               Result.Append (Gir_Reader.Key_Types.Element_Key (K));
-            end;
+         The_Element : Real_Element renames Real_Element (Self.Element);
+         begin
+      for Iterator in The_Element.Sub_Elements.Iterate loop
+         Result.Append (Real_Elements.Element_Maps.Key (Iterator));
          end loop;
       end;
 
       return Result;
-   end Get_Sub_Element_Key_List;
+
+   end Get_Sub_Elements_Key_List;
 
    ------------------
    -- Internal_Get --
    ------------------
 
    function Internal_Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Element_Key'Class)
+     (Self : Element; Item : Gir_Reader.Key_Types.Element_Key)
       return Holder_Content_Root'Class
    is (Real_Element (Self.Element).Sub_Elements (Item))
    with Inline;
@@ -266,7 +262,7 @@ package body Gir_Reader.Elements is
 
    procedure Internal_Set
      (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Element_Key'Class;
+      Item  : Gir_Reader.Key_Types.Element_Key;
       Value : Holder_Content_Root'Class) is
    begin
       if Self.Is_Empty then
@@ -303,6 +299,10 @@ package body Gir_Reader.Elements is
       Internal_Set (Self, Item, Value_Record);
    end Set;
 
+   ---------
+   -- Set --
+   ---------
+
    procedure Set
      (Self : in out Element; Value : Gir_Reader.Attribute_Maps.Attribute_Map)
    is
@@ -323,6 +323,10 @@ package body Gir_Reader.Elements is
 
    end Set;
 
+   -----------------
+   -- Set_Content --
+   -----------------
+
    procedure Set_Content
      (Self : in out Element; Value : Ada.Strings.Unbounded.Unbounded_String) is
    begin
@@ -340,6 +344,7 @@ package body Gir_Reader.Elements is
       end if;
 
    end Set_Content;
+
    ------------
    -- Append --
    ------------
@@ -409,10 +414,18 @@ package body Gir_Reader.Elements is
       end if;
    end Image;
 
+   ---------
+   -- "/" --
+   ---------
+
    function "/"
      (Left : Element; Right : Gir_Reader.Key_Types.Element_Key)
       return Gir_Reader.Element_Lists.List
    is (Left.Get_Or_Else (Right, Gir_Reader.Element_Lists.Empty_List));
+
+   ---------
+   -- "/" --
+   ---------
 
    function "/"
      (Left : Element; Right : Gir_Reader.Key_Types.Element_Key) return Element

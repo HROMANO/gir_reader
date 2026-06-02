@@ -113,7 +113,7 @@ begin
          TIO.Put_Line (Repository.Get_Attributes'Image);
          TIO.Put_Line
            ("Repository sub elements: "
-            & Repository.Get_Sub_Element_Key_List'Image);
+            & Repository.Get_Sub_Elements_Key_List'Image);
 
          if Repository.Contains (Gir_Reader.Keys.Namespace) then
             --  Only one namespace in a repository.
@@ -124,13 +124,13 @@ begin
             TIO.Put_Line ("Namespace attributes:");
             TIO.Put_Line (Namespace.Get_Attributes'Image);
             TIO.Put_Line
-              ("Sub elements: " & Namespace.Get_Sub_Element_Key_List'Image);
+              ("Sub elements: " & Namespace.Get_Sub_Elements_Key_List'Image);
          end if;
          TIO.New_Line;
 
       end if;
 
-      KEYS : for K of Gir.Get_Sub_Element_Key_List loop
+      KEYS : for K of Gir.Get_Sub_Elements_Key_List loop
          TIO.Put_Line (K'Image);
       end loop KEYS;
 

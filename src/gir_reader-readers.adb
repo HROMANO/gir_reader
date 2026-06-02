@@ -25,7 +25,7 @@ package body Gir_Reader.Readers is
    package Key_Vectors is new
      Ada.Containers.Indefinite_Vectors
        (Index_Type   => Positive,
-        Element_Type => Gir_Reader.Key_Types.Element_Key'Class);
+        Element_Type => Gir_Reader.Key_Types.Element_Key);
 
    --
    --  Reader type
