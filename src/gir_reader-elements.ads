@@ -2,8 +2,10 @@
 
 pragma Ada_2022;
 
+with Ada.Strings.Unbounded;
 with Ada.Strings.Text_Buffers;
 
+with Gir_Reader.Attribute_Maps;
 with Gir_Reader.Key_Types;
 with Gir_Reader.Key_Lists;
 
@@ -34,7 +36,7 @@ package Gir_Reader.Elements is
    --  @param Item The requested key.
    --  @return True if the key exists in the element.
    function Contains
-     (Self : Element; Item : Gir_Reader.Key_Types.Key'Class) return Boolean;
+     (Self : Element; Item : Gir_Reader.Key_Types.Element_Key'Class) return Boolean;
 
    --  Get all keys of sub elements.
    --  @param Self The element.
@@ -45,87 +47,14 @@ package Gir_Reader.Elements is
    --  Get attributes of the element excluding sub-elements.
    --  @param Self The element.
    --  @return The filtered element.
-   function Get_Attributes (Self : Element) return Element;
+   function Get_Attributes
+     (Self : Element) return Gir_Reader.Attribute_Maps.Attribute_Map;
+
+   function Get_Content (Self : Element) return Utf8;
 
    ------------------
    --  Get methods --
    ------------------
-
-   --  Get the requested boolean key of the element or the provided default
-   --  value if Self doesn't contain the key.
-   --  @param Self The element.
-   --  @param Item A boolean key.
-   --  @param Default Default return value.
-   --  @return The value of the key or the default value.
-   function Get_Or_Else
-     (Self    : Element;
-      Item    : Gir_Reader.Key_Types.Boolean_Key;
-      Default : Boolean) return Boolean;
-
-   --  Get the requested in out key of the element or the provided default
-   --  value if Self doesn't contain the key.
-   --  @param Self The element.
-   --  @param Item An in out key.
-   --  @param Default Default return value.
-   --  @return The value of the key or the default value.
-   function Get_Or_Else
-     (Self    : Element;
-      Item    : Gir_Reader.Key_Types.Parameter_Direction_Key;
-      Default : Parameter_Direction) return Parameter_Direction;
-
-   --  Get the requested integer key of the element or the provided default
-   --  value if Self doesn't contain the key.
-   --  @param Self The element.
-   --  @param Item An integer key.
-   --  @param Default Default return value.
-   --  @return The value of the key or the default value.
-   function Get_Or_Else
-     (Self    : Element;
-      Item    : Gir_Reader.Key_Types.Integer_Key;
-      Default : Integer) return Integer;
-
-   --  Get the requested lifetime scope key of the element or the provided
-   --  default value if Self doesn't contain the key.
-   --  @param Self The element.
-   --  @param Item A lifetime scope key.
-   --  @param Default Default return value.
-   --  @return The value of the key or the default value.
-   function Get_Or_Else
-     (Self    : Element;
-      Item    : Gir_Reader.Key_Types.Lifetime_Scope_Key;
-      Default : Lifetime_Scope) return Lifetime_Scope;
-
-   --  Get the requested ownership key of the element or the provided default
-   --  value if Self doesn't contain the key.
-   --  @param Self The element.
-   --  @param Item An ownership key.
-   --  @param Default Default return value.
-   --  @return The value of the key or the default value.
-   function Get_Or_Else
-     (Self    : Element;
-      Item    : Gir_Reader.Key_Types.Ownership_Key;
-      Default : Ownership) return Ownership;
-
-   --  Get the requested signal emission key of the element or the provided
-   --  default value if Self doesn't contain the key.
-   --  @param Self The element.
-   --  @param Item A signal emission key.
-   --  @param Default Default return value.
-   --  @return The value of the key or the default value.
-   function Get_Or_Else
-     (Self    : Element;
-      Item    : Gir_Reader.Key_Types.Signal_Emission_Key;
-      Default : Signal_Emission) return Signal_Emission;
-
-   --  Get the requested text key of the element or the provided default
-   --  value if Self doesn't contain the key.
-   --  @param Self The element.
-   --  @param Item A text key.
-   --  @param Default Default return value.
-   --  @return The value of the key or the default value.
-   function Get_Or_Else
-     (Self : Element; Item : Gir_Reader.Key_Types.Text_Key; Default : Utf8)
-      return Utf8;
 
    --  Get the requested sub-element key of the element or the provided default
    --  value if Self doesn't contain the key.
@@ -139,79 +68,10 @@ package Gir_Reader.Elements is
       Default : Gir_Reader.Element_Lists.List)
       return Gir_Reader.Element_Lists.List;
 
+
    ------------------
    --  Set methods --
    ------------------
-
-   --  Set the value of the requested boolean key for the element.
-   --  @param Self The element.
-   --  @param Item A boolean key.
-   --  @param Value The value for the key.
-   procedure Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Boolean_Key;
-      Value : Boolean)
-   with Post'Class => Self.Contains (Item);
-
-   --  Set the value of the requested in out key for the element.
-   --  @param Self The element.
-   --  @param Item An in out key.
-   --  @param Value The value for the key.
-   procedure Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Parameter_Direction_Key;
-      Value : Parameter_Direction)
-   with Post'Class => Self.Contains (Item);
-
-   --  Set the value of the requested integer key for the element.
-   --  @param Self The element.
-   --  @param Item An integer key.
-   --  @param Value The value for the key.
-   procedure Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Integer_Key;
-      Value : Integer)
-   with Post'Class => Self.Contains (Item);
-
-   --  Set the value of the requested lifeteim scope key for the element.
-   --  @param Self The element.
-   --  @param Item A lifetime scope key.
-   --  @param Value The value for the key.
-   procedure Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Lifetime_Scope_Key;
-      Value : Lifetime_Scope)
-   with Post'Class => Self.Contains (Item);
-
-   --  Set the value of the requested ownership key for the element.
-   --  @param Self The element.
-   --  @param Item An ownership key.
-   --  @param Value The value for the key.
-   procedure Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Ownership_Key;
-      Value : Ownership)
-   with Post'Class => Self.Contains (Item);
-
-   --  Set the value of the requested signal emission key for the element.
-   --  @param Self The element.
-   --  @param Item A signal emission key.
-   --  @param Value The value for the key.
-   procedure Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Signal_Emission_Key;
-      Value : Signal_Emission)
-   with Post'Class => Self.Contains (Item);
-
-   --  Set the value of the requested text key for the element.
-   --  @param Self The element.
-   --  @param Item A text key.
-   --  @param Value The value for the key as an UTF8 encoded String.
-   procedure Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Text_Key;
-      Value : Utf8)
-   with Post'Class => Self.Contains (Item);
 
    --  Set the value of the requested sub-element key for the element.
    --  Note: sub-elements are always of type 'List'.
@@ -223,6 +83,13 @@ package Gir_Reader.Elements is
       Item  : Gir_Reader.Key_Types.Element_Key;
       Value : Gir_Reader.Element_Lists.List)
    with Post'Class => Self.Contains (Item);
+
+   procedure Set
+     (Self : in out Element; Value : Gir_Reader.Attribute_Maps.Attribute_Map);
+   --  with Post'Class => Self.Contains (Item);
+
+   procedure Set_Content
+     (Self : in out Element; Value : Ada.Strings.Unbounded.Unbounded_String);
 
    --------------
    --  Others  --

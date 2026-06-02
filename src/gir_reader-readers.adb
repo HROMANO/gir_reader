@@ -8,6 +8,7 @@ with Sax.Attributes;
 with Sax.Readers;
 with Unicode.CES;
 
+with Gir_Reader.Attribute_Maps;
 with Gir_Reader.Element_Lists;
 with Gir_Reader.Key_Types;
 with Gir_Reader.Keys;
@@ -20,11 +21,11 @@ package body Gir_Reader.Readers is
    use type Ada.Strings.Unbounded.Unbounded_String;
 
    --  @private Internal use.
-   --  A vector of keys.
+   --  A vector of Element_Keys.
    package Key_Vectors is new
      Ada.Containers.Indefinite_Vectors
        (Index_Type   => Positive,
-        Element_Type => Gir_Reader.Key_Types.Key'Class);
+        Element_Type => Gir_Reader.Key_Types.Element_Key'Class);
 
    --
    --  Reader type
@@ -32,6 +33,7 @@ package body Gir_Reader.Readers is
 
    type Reader is new Sax.Readers.Reader with record
       Current_Value                 : Ada.Strings.Unbounded.Unbounded_String;
+      Current_Attributes            : Gir_Reader.Attribute_Maps.Attribute_Map;
       Current_Key_List              : Key_Vectors.Vector;
       Current_Element               : Gir_Reader.Elements.Element;
       Current_Element_List          : Gir_Reader.Element_Lists.List;
@@ -103,9 +105,9 @@ package body Gir_Reader.Readers is
       Value          : String) is
    begin
       if Value = "0" then
-         Handler.Current_Element.Set (Attribute_Key, False);
+         Handler.Current_Attributes.Set (Attribute_Key, False);
       elsif Value = "1" then
-         Handler.Current_Element.Set (Attribute_Key, True);
+         Handler.Current_Attributes.Set (Attribute_Key, True);
       else
          Log_Error ("'" & Attribute_Name & "' not in (0-1): " & Value);
       end if;
@@ -124,7 +126,7 @@ package body Gir_Reader.Readers is
       Number : Integer;
    begin
       Number := Integer'Value (Value);
-      Handler.Current_Element.Set (Attribute_Key, Number);
+      Handler.Current_Attributes.Set (Attribute_Key, Number);
    exception
       when Constraint_Error =>
          Log_Error ("'" & Attribute_Name & "' is not an integer: " & Value);
@@ -141,11 +143,11 @@ package body Gir_Reader.Readers is
       Value          : String) is
    begin
       if Value = "in" then
-         Handler.Current_Element.Set (Attribute_Key, Is_In);
+         Handler.Current_Attributes.Set (Attribute_Key, Is_In);
       elsif Value = "out" then
-         Handler.Current_Element.Set (Attribute_Key, Is_Out);
+         Handler.Current_Attributes.Set (Attribute_Key, Is_Out);
       elsif Value = "inout" then
-         Handler.Current_Element.Set (Attribute_Key, Is_In_Out);
+         Handler.Current_Attributes.Set (Attribute_Key, Is_In_Out);
       else
          Log_Error
            ("'" & Attribute_Name & "' not in (in, out, inout): " & Value);
@@ -163,13 +165,13 @@ package body Gir_Reader.Readers is
       Value          : String) is
    begin
       if Value = "notified" then
-         Handler.Current_Element.Set (Attribute_Key, Notified);
+         Handler.Current_Attributes.Set (Attribute_Key, Notified);
       elsif Value = "async" then
-         Handler.Current_Element.Set (Attribute_Key, Async);
+         Handler.Current_Attributes.Set (Attribute_Key, Async);
       elsif Value = "call" then
-         Handler.Current_Element.Set (Attribute_Key, Call);
+         Handler.Current_Attributes.Set (Attribute_Key, Call);
       elsif Value = "forever" then
-         Handler.Current_Element.Set (Attribute_Key, Forever);
+         Handler.Current_Attributes.Set (Attribute_Key, Forever);
       else
          Log_Error
            ("'"
@@ -190,11 +192,11 @@ package body Gir_Reader.Readers is
       Value          : String) is
    begin
       if Value = "none" then
-         Handler.Current_Element.Set (Attribute_Key, None);
+         Handler.Current_Attributes.Set (Attribute_Key, None);
       elsif Value = "container" then
-         Handler.Current_Element.Set (Attribute_Key, Container);
+         Handler.Current_Attributes.Set (Attribute_Key, Container);
       elsif Value = "full" then
-         Handler.Current_Element.Set (Attribute_Key, Full);
+         Handler.Current_Attributes.Set (Attribute_Key, Full);
       else
          Log_Error
            ("'"
@@ -215,11 +217,11 @@ package body Gir_Reader.Readers is
       Value          : String) is
    begin
       if Value = "first" then
-         Handler.Current_Element.Set (Attribute_Key, First);
+         Handler.Current_Attributes.Set (Attribute_Key, First);
       elsif Value = "last" then
-         Handler.Current_Element.Set (Attribute_Key, Last);
+         Handler.Current_Attributes.Set (Attribute_Key, Last);
       elsif Value = "cleanup" then
-         Handler.Current_Element.Set (Attribute_Key, Cleanup);
+         Handler.Current_Attributes.Set (Attribute_Key, Cleanup);
       else
          Log_Error
            ("'"
@@ -232,6 +234,14 @@ package body Gir_Reader.Readers is
    --------------------
    -- Get_Attributes --
    --------------------
+
+   procedure Get_Attributes
+     (Handler : in out Reader; Atts : Sax.Attributes.Attributes'Class)
+   with
+     Pre  =>
+       Handler.Current_Attributes.Is_Empty
+       and then Handler.Current_Element.Get_Attributes.Is_Empty,
+     Post => Handler.Current_Attributes.Is_Empty;
 
    procedure Get_Attributes
      (Handler : in out Reader; Atts : Sax.Attributes.Attributes'Class) is
@@ -396,170 +406,183 @@ package body Gir_Reader.Readers is
                  (Handler, Attribute_Name, Signal_When, Atts.Get_Value (J));
 
             elsif Attribute_Name = "c:identifier" then
-               Handler.Current_Element.Set (C_Identifier, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set
+                 (C_Identifier, Atts.Get_Value (J));
 
             elsif Attribute_Name = "c:identifier-prefixes" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (C_Identifier_Prefixes, Atts.Get_Value (J));
 
             elsif Attribute_Name = "c:prefix" then
-               Handler.Current_Element.Set (C_Prefix, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (C_Prefix, Atts.Get_Value (J));
 
             elsif Attribute_Name = "c:symbol-prefix" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (C_Symbol_Prefix, Atts.Get_Value (J));
 
             elsif Attribute_Name = "c:symbol-prefixes" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (C_Symbol_Prefixes, Atts.Get_Value (J));
 
             elsif Attribute_Name = "c:type" then
-               Handler.Current_Element.Set (C_Type, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (C_Type, Atts.Get_Value (J));
 
             elsif Attribute_Name = "column" then
-               Handler.Current_Element.Set (Column, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Column, Atts.Get_Value (J));
 
             elsif Attribute_Name = "copy-function" then
-               Handler.Current_Element.Set (Copy_Function, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set
+                 (Copy_Function, Atts.Get_Value (J));
 
             elsif Attribute_Name = "default-value" then
-               Handler.Current_Element.Set (Default_Value, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set
+                 (Default_Value, Atts.Get_Value (J));
 
             elsif Attribute_Name = "deprecated-version" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (Deprecated_Version, Atts.Get_Value (J));
 
             elsif Attribute_Name = "emitter" then
-               Handler.Current_Element.Set (Emitter, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Emitter, Atts.Get_Value (J));
 
             elsif Attribute_Name = "filename" then
-               Handler.Current_Element.Set (Filename, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Filename, Atts.Get_Value (J));
 
             elsif Attribute_Name = "free-function" then
-               Handler.Current_Element.Set (Free_Function, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set
+                 (Free_Function, Atts.Get_Value (J));
 
             elsif Attribute_Name = "getter" then
-               Handler.Current_Element.Set (Getter, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Getter, Atts.Get_Value (J));
 
             elsif Attribute_Name = "glib:async-func" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (Glib_Async_Func, Atts.Get_Value (J));
 
             elsif Attribute_Name = "glib:error-domain" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (Glib_Error_Domain, Atts.Get_Value (J));
 
             elsif Attribute_Name = "glib:finish-func" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (Glib_Finish_Func, Atts.Get_Value (J));
 
             elsif Attribute_Name = "glib:get-property" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (Glib_Get_Property, Atts.Get_Value (J));
 
             elsif Attribute_Name = "glib:get-type" then
-               Handler.Current_Element.Set (Glib_Get_Type, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set
+                 (Glib_Get_Type, Atts.Get_Value (J));
 
             elsif Attribute_Name = "glib:get-value-func" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (Glib_Get_Value_Func, Atts.Get_Value (J));
 
             elsif Attribute_Name = "glib:is-gtype-struct-for" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (Glib_Is_Gtype_Struct_For, Atts.Get_Value (J));
 
             elsif Attribute_Name = "glib:name" then
-               Handler.Current_Element.Set (Glib_Name, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Glib_Name, Atts.Get_Value (J));
 
             elsif Attribute_Name = "glib:nick" then
-               Handler.Current_Element.Set (Glib_Nick, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Glib_Nick, Atts.Get_Value (J));
 
             elsif Attribute_Name = "glib:ref-func" then
-               Handler.Current_Element.Set (Glib_Ref_Func, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set
+                 (Glib_Ref_Func, Atts.Get_Value (J));
 
             elsif Attribute_Name = "glib:set-property" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (Glib_Set_Property, Atts.Get_Value (J));
 
             elsif Attribute_Name = "glib:set-value-func" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (Glib_Set_Value_Func, Atts.Get_Value (J));
 
             elsif Attribute_Name = "glib:sync-func" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (Glib_Sync_Func, Atts.Get_Value (J));
 
             elsif Attribute_Name = "glib:type-name" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (Glib_Type_Name, Atts.Get_Value (J));
 
             elsif Attribute_Name = "glib:type-struct" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (Glib_Type_Struct, Atts.Get_Value (J));
 
             elsif Attribute_Name = "glib:unref-func" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (Glib_Unref_Func, Atts.Get_Value (J));
 
             elsif Attribute_Name = "invoker" then
-               Handler.Current_Element.Set (Invoker, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Invoker, Atts.Get_Value (J));
 
             elsif Attribute_Name = "line" then
-               Handler.Current_Element.Set (Line, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Line, Atts.Get_Value (J));
 
             elsif Attribute_Name = "moved-to" then
-               Handler.Current_Element.Set (Moved_To, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Moved_To, Atts.Get_Value (J));
 
             elsif Attribute_Name = "name" then
-               Handler.Current_Element.Set (Name, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Name, Atts.Get_Value (J));
 
             elsif Attribute_Name = "parent" then
-               Handler.Current_Element.Set (Parent, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Parent, Atts.Get_Value (J));
 
             elsif Attribute_Name = "setter" then
-               Handler.Current_Element.Set (Setter, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Setter, Atts.Get_Value (J));
 
             elsif Attribute_Name = "shadowed-by" then
-               Handler.Current_Element.Set (Shadowed_By, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set
+                 (Shadowed_By, Atts.Get_Value (J));
 
             elsif Attribute_Name = "shadows" then
-               Handler.Current_Element.Set (Shadows, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Shadows, Atts.Get_Value (J));
 
             elsif Attribute_Name = "shared-library" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (Shared_Library, Atts.Get_Value (J));
 
             elsif Attribute_Name = "stability" then
-               Handler.Current_Element.Set (Stability, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Stability, Atts.Get_Value (J));
 
             elsif Attribute_Name = "value" then
-               Handler.Current_Element.Set (Value, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Value, Atts.Get_Value (J));
 
             elsif Attribute_Name = "version" then
-               Handler.Current_Element.Set (Version, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Version, Atts.Get_Value (J));
 
             elsif Attribute_Name = "xml:space" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (Preserve_Xml_Space, Atts.Get_Value (J));
 
             elsif Attribute_Name = "xml:whitespace" then
-               Handler.Current_Element.Set
+               Handler.Current_Attributes.Set
                  (Preserve_Xml_Whitespace, Atts.Get_Value (J));
 
             elsif Attribute_Name = "xmlns" then
-               Handler.Current_Element.Set (Xmlns, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Xmlns, Atts.Get_Value (J));
 
             elsif Attribute_Name = "xmlns:c" then
-               Handler.Current_Element.Set (Xmlns_C, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Xmlns_C, Atts.Get_Value (J));
 
             elsif Attribute_Name = "xmlns:glib" then
-               Handler.Current_Element.Set (Xmlns_Glib, Atts.Get_Value (J));
+               Handler.Current_Attributes.Set (Xmlns_Glib, Atts.Get_Value (J));
 
             else
                Log_Warning ("Unknown attribute: " & (Attribute_Name));
             end if;
          end ONE_ATTRIBUTE;
       end loop;
+
+      if not Handler.Current_Attributes.Is_Empty then
+         Handler.Current_Element.Set (Handler.Current_Attributes);
+         Handler.Current_Attributes.Clear;
+      end if;
+
    end Get_Attributes;
 
    ---------------------
@@ -790,8 +813,7 @@ package body Gir_Reader.Readers is
 
       if Handler.Current_Value /= Ada.Strings.Unbounded.Null_Unbounded_String
       then
-         Handler.Current_Element.Set
-           (Content, Ada.Strings.Unbounded.To_String (Handler.Current_Value));
+         Handler.Current_Element.Set_Content (Handler.Current_Value);
          Handler.Current_Value := Ada.Strings.Unbounded.Null_Unbounded_String;
       end if;
 

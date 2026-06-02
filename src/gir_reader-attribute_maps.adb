@@ -148,10 +148,6 @@ package body Gir_Reader.Attribute_Maps is
          return;
       end if;
 
-      Output.Put ("(");
-      Output.New_Line;
-      Output.Increase_Indent (3);
-
       for Index in Item.Iterate loop
          declare
             Key  : Gir_Reader.Key_Types.Attribute_Key'Class renames
@@ -194,10 +190,6 @@ package body Gir_Reader.Attribute_Maps is
             end if;
          end;
       end loop;
-
-      Output.Decrease_Indent (3);
-      Output.New_Line;
-      Output.Put (")");
 
    end Image;
 

@@ -1,7 +1,9 @@
 pragma Ada_2022;
 
 with Ada.Containers.Indefinite_Ordered_Maps;
+with Ada.Strings.Unbounded;
 
+with Gir_Reader.Attribute_Maps;
 with Gir_Reader.Element_Lists;
 with Gir_Reader.Images;
 
@@ -25,191 +27,137 @@ package body Gir_Reader.Elements is
    end Image;
 
    --
-   --  Boolean type
+   --  Attribute type
    --
 
-   type Boolean_Data is new Holder_Content_Root with record
-      Value : Boolean;
+   type Attributes_Data is new Holder_Content_Root with record
+      Value : Gir_Reader.Attribute_Maps.Attribute_Map;
    end record;
 
    procedure Image
      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
-      Item   : Boolean_Data) is
+      Item   : Attributes_Data) is
    begin
-      Gir_Reader.Images.Image (Output, Item.Value);
+      Gir_Reader.Attribute_Maps.Image (Output, Item.Value);
    end Image;
-
-   --
-   --  Parameter_Direction type
-   --
-
-   type Parameter_Direction_Data is new Holder_Content_Root with record
-      Value : Parameter_Direction;
-   end record;
-
-   procedure Image
-     (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
-      Item   : Parameter_Direction_Data) is
-   begin
-      Image (Output, Item.Value);
-   end Image;
-
-   --
-   --  Integer type
-   --
-
-   type Integer_Data is new Holder_Content_Root with record
-      Value : Integer;
-   end record;
-
-   procedure Image
-     (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
-      Item   : Integer_Data) is
-   begin
-      Gir_Reader.Images.Image (Output, Item.Value);
-   end Image;
-
-   --
-   --  Lifetime_Scope type
-   --
-
-   type Lifetime_Scope_Data is new Holder_Content_Root with record
-      Value : Lifetime_Scope;
-   end record;
-
-   procedure Image
-     (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
-      Item   : Lifetime_Scope_Data) is
-   begin
-      Image (Output, Item.Value);
-   end Image;
-
-   --
-   --  Ownership type
-   --
-
-   type Ownership_Data is new Holder_Content_Root with record
-      Value : Ownership;
-   end record;
-
-   procedure Image
-     (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
-      Item   : Ownership_Data) is
-   begin
-      Image (Output, Item.Value);
-   end Image;
-
-   --
-   --  Signal_Emission type
-   --
-
-   type Signal_Emission_Data is new Holder_Content_Root with record
-      Value : Signal_Emission;
-   end record;
-
-   procedure Image
-     (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
-      Item   : Signal_Emission_Data) is
-   begin
-      Image (Output, Item.Value);
-   end Image;
-
-   --
-   --  Text type
-   --
-
-   type Text_Data (Length : Natural) is new Holder_Content_Root with record
-      Value : Utf8 (1 .. Length);
-   end record;
-
-   procedure Image
-     (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
-      Item   : Text_Data) is
-   begin
-      Gir_Reader.Images.Image (Output, Item.Value);
-   end Image;
-
-   --
-   --  Element_Map type
-   --
-
-   package Element_Maps is new
-     Ada.Containers.Indefinite_Ordered_Maps
-       (Key_Type     => Gir_Reader.Key_Types.Key'Class,
-        Element_Type => Holder_Content_Root'Class,
-        "<"          => Gir_Reader.Key_Types.Less_Than);
 
    --
    --  Real_Element type
    --
 
-   type Real_Element is new Element_Maps.Map and Holder_Content_Root
-   with null record;
+   package Real_Elements is
 
-   procedure Image
-     (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
-      Item   : Real_Element)
-   is
-      use type Element_Maps.Cursor;
-   begin
-      if Item.Is_Empty then
-         Output.Put ("()");
-         return;
-      end if;
+      function Less_Than
+        (Left, Right : Gir_Reader.Key_Types.Element_Key'Class) return Boolean
+      is (Gir_Reader.Key_Types.Less_Than
+            (Gir_Reader.Key_Types.Key (Left),
+             Gir_Reader.Key_Types.Key (Right)));
 
-      Output.Put ("(");
-      Output.New_Line;
-      Output.Increase_Indent (3);
+      package Element_Maps is new
+        Ada.Containers.Indefinite_Ordered_Maps
+          (Key_Type     => Gir_Reader.Key_Types.Element_Key'Class,
+           Element_Type => Holder_Content_Root'Class,
+           "<"          => Less_Than);
 
-      for Index in Item.Iterate loop
-         declare
-            Key  : Gir_Reader.Key_Types.Key'Class renames
-              Element_Maps.Key (Index);
-            Data : Holder_Content_Root'Class renames Item.Element (Key);
-         begin
-            Gir_Reader.Key_Types.Image (Output, Key);
-            Output.Put (": ");
+      type Real_Element is new Holder_Content_Root with record
+         Sub_Elements : Element_Maps.Map := Element_Maps.Empty_Map;
+         Attributes   : Gir_Reader.Attribute_Maps.Attribute_Map :=
+           Gir_Reader.Attribute_Maps.Empty_Attribute_Map;
+         Content      : Ada.Strings.Unbounded.Unbounded_String :=
+           Ada.Strings.Unbounded.Null_Unbounded_String;
+      end record;
 
-            --  TODO: could this be avoided?
-            if Key in Gir_Reader.Key_Types.Boolean_Key'Class then
-               Image (Output, Boolean_Data (Data));
+      function Is_Empty (Item : Real_Element) return Boolean;
 
-            elsif Key in Gir_Reader.Key_Types.Parameter_Direction_Key'Class
-            then
-               Image (Output, Parameter_Direction_Data (Data));
+      procedure Image
+        (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
+         Item   : Real_Element);
 
-            elsif Key in Gir_Reader.Key_Types.Integer_Key'Class then
-               Image (Output, Integer_Data (Data));
+   end Real_Elements;
 
-            elsif Key in Gir_Reader.Key_Types.Lifetime_Scope_Key'Class then
-               Image (Output, Lifetime_Scope_Data (Data));
+   package body Real_Elements is
 
-            elsif Key in Gir_Reader.Key_Types.Ownership_Key'Class then
-               Image (Output, Ownership_Data (Data));
+      use type Ada.Strings.Unbounded.Unbounded_String;
 
-            elsif Key in Gir_Reader.Key_Types.Signal_Emission_Key'Class then
-               Image (Output, Signal_Emission_Data (Data));
+      function Is_Empty (Item : Real_Element) return Boolean is
+      begin
+         return
+           Item.Sub_Elements.Is_Empty
+           and then Item.Attributes.Is_Empty
+           and then Item.Content = Ada.Strings.Unbounded.Null_Unbounded_String;
+      end Is_Empty;
 
-            elsif Key in Gir_Reader.Key_Types.Text_Key'Class then
-               Image (Output, Text_Data (Data));
+      procedure Image
+        (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
+         Item   : Real_Element)
+      is
+         use type Element_Maps.Cursor;
+      begin
+         if Item.Is_Empty then
+            Output.Put ("()");
+            return;
+         end if;
 
-            elsif Key in Gir_Reader.Key_Types.Element_Key'Class then
+         Output.Put ("(");
+         Output.New_Line;
+         Output.Increase_Indent (3);
+
+         if not Item.Attributes.Is_Empty then
+            Output.Put ("Attributes:");
+            Output.New_Line;
+            Output.Increase_Indent (3);
+            Gir_Reader.Attribute_Maps.Image (Output, Item.Attributes);
+            Output.Decrease_Indent (3);
+            Output.New_Line;
+         end if;
+
+         if Item.Content /= Ada.Strings.Unbounded.Null_Unbounded_String then
+            Output.Put ("Content:");
+            Output.New_Line;
+            Output.Increase_Indent (3);
+            Gir_Reader.Images.Image
+              (Output, Ada.Strings.Unbounded.To_String (Item.Content));
+            Output.Decrease_Indent (3);
+            Output.New_Line;
+         end if;
+
+         if Item.Sub_Elements.Is_Empty then
+            Output.Decrease_Indent (3);
+            return;
+         end if;
+
+         Output.Put ("Sub elements:");
+         Output.New_Line;
+         Output.Increase_Indent (3);
+
+         for Index in Item.Sub_Elements.Iterate loop
+            declare
+               Key  : Gir_Reader.Key_Types.Element_Key'Class renames
+                 Element_Maps.Key (Index);
+               Data : Holder_Content_Root'Class renames
+                 Item.Sub_Elements.Element (Key);
+            begin
+               Gir_Reader.Key_Types.Image (Output, Key);
+               Output.Put (": ");
+
                Image (Output, Vector_Data (Data));
 
-            end if;
+               if Element_Maps.Next (Index) /= Element_Maps.No_Element then
+                  Output.Put (",");
+                  Output.New_Line;
+               end if;
+            end;
+         end loop;
 
-            if Element_Maps.Next (Index) /= Element_Maps.No_Element then
-               Output.Put (",");
-               Output.New_Line;
-            end if;
-         end;
-      end loop;
+         Output.Decrease_Indent (6);
+         Output.New_Line;
+         Output.Put (")");
 
-      Output.Decrease_Indent (3);
-      Output.New_Line;
-      Output.Put (")");
+      end Image;
 
-   end Image;
+   end Real_Elements;
+
+   subtype Real_Element is Real_Elements.Real_Element;
 
    -------------------
    -- Empty_Element --
@@ -250,13 +198,14 @@ package body Gir_Reader.Elements is
    --------------
 
    function Contains
-     (Self : Element; Item : Gir_Reader.Key_Types.Key'Class) return Boolean is
+     (Self : Element; Item : Gir_Reader.Key_Types.Element_Key'Class)
+      return Boolean is
    begin
       if Self.Is_Empty then
          return False;
       end if;
 
-      return Real_Element (Self.Element).Contains (Item);
+      return Real_Element (Self.Element).Sub_Elements.Contains (Item);
    end Contains;
 
    ------------------------------
@@ -275,14 +224,12 @@ package body Gir_Reader.Elements is
       declare
          Map : Real_Element renames Real_Element (Self.Element);
       begin
-         for Iterator in Map.Iterate loop
+         for Iterator in Map.Sub_Elements.Iterate loop
             declare
-               K : Gir_Reader.Key_Types.Key'Class renames
-                 Element_Maps.Key (Iterator);
+               K : Gir_Reader.Key_Types.Element_Key'Class renames
+                 Real_Elements.Element_Maps.Key (Iterator);
             begin
-               if K in Gir_Reader.Key_Types.Element_Key'Class then
-                  Result.Append (Gir_Reader.Key_Types.Element_Key (K));
-               end if;
+               Result.Append (Gir_Reader.Key_Types.Element_Key (K));
             end;
          end loop;
       end;
@@ -295,93 +242,10 @@ package body Gir_Reader.Elements is
    ------------------
 
    function Internal_Get
-     (Self : Element; Item : Gir_Reader.Key_Types.Key'Class)
+     (Self : Element; Item : Gir_Reader.Key_Types.Element_Key'Class)
       return Holder_Content_Root'Class
-   is (Real_Element (Self.Element) (Item))
+   is (Real_Element (Self.Element).Sub_Elements (Item))
    with Inline;
-
-   -----------------
-   -- Get_Or_Else --
-   -----------------
-
-   function Get_Or_Else
-     (Self    : Element;
-      Item    : Gir_Reader.Key_Types.Boolean_Key;
-      Default : Boolean) return Boolean
-   is (if Self.Contains (Item)
-       then Boolean_Data (Internal_Get (Self, Item)).Value
-       else Default);
-
-   -----------------
-   -- Get_Or_Else --
-   -----------------
-
-   function Get_Or_Else
-     (Self    : Element;
-      Item    : Gir_Reader.Key_Types.Parameter_Direction_Key;
-      Default : Parameter_Direction) return Parameter_Direction
-   is (if Self.Contains (Item)
-       then Parameter_Direction_Data (Internal_Get (Self, Item)).Value
-       else Default);
-
-   -----------------
-   -- Get_Or_Else --
-   -----------------
-
-   function Get_Or_Else
-     (Self    : Element;
-      Item    : Gir_Reader.Key_Types.Integer_Key;
-      Default : Integer) return Integer
-   is (if Self.Contains (Item)
-       then Integer_Data (Internal_Get (Self, Item)).Value
-       else Default);
-
-   -----------------
-   -- Get_Or_Else --
-   -----------------
-
-   function Get_Or_Else
-     (Self    : Element;
-      Item    : Gir_Reader.Key_Types.Lifetime_Scope_Key;
-      Default : Lifetime_Scope) return Lifetime_Scope
-   is (if Self.Contains (Item)
-       then Lifetime_Scope_Data (Internal_Get (Self, Item)).Value
-       else Default);
-
-   -----------------
-   -- Get_Or_Else --
-   -----------------
-
-   function Get_Or_Else
-     (Self    : Element;
-      Item    : Gir_Reader.Key_Types.Ownership_Key;
-      Default : Ownership) return Ownership
-   is (if Self.Contains (Item)
-       then Ownership_Data (Internal_Get (Self, Item)).Value
-       else Default);
-
-   -----------------
-   -- Get_Or_Else --
-   -----------------
-
-   function Get_Or_Else
-     (Self    : Element;
-      Item    : Gir_Reader.Key_Types.Signal_Emission_Key;
-      Default : Signal_Emission) return Signal_Emission
-   is (if Self.Contains (Item)
-       then Signal_Emission_Data (Internal_Get (Self, Item)).Value
-       else Default);
-
-   -----------------
-   -- Get_Or_Else --
-   -----------------
-
-   function Get_Or_Else
-     (Self : Element; Item : Gir_Reader.Key_Types.Text_Key; Default : Utf8)
-      return Utf8
-   is (if Self.Contains (Item)
-       then Text_Data (Internal_Get (Self, Item)).Value
-       else Default);
 
    -----------------
    -- Get_Or_Else --
@@ -402,7 +266,7 @@ package body Gir_Reader.Elements is
 
    procedure Internal_Set
      (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Key'Class;
+      Item  : Gir_Reader.Key_Types.Element_Key'Class;
       Value : Holder_Content_Root'Class) is
    begin
       if Self.Is_Empty then
@@ -410,115 +274,19 @@ package body Gir_Reader.Elements is
          declare
             R : Real_Element;
          begin
-            R.Insert (Item, Value);
+            R.Sub_Elements.Insert (Item, Value);
             Self.Replace_Element (R);
          end;
 
-      elsif Real_Element (Self.Element).Contains (Item) then
-         Real_Element (Self.Reference.Element.all) (Item) := Value;
+      elsif Real_Element (Self.Element).Sub_Elements.Contains (Item) then
+         Real_Element (Self.Reference.Element.all).Sub_Elements (Item) :=
+           Value;
       else
-         Real_Element (Self.Reference.Element.all).Insert (Item, Value);
+         Real_Element (Self.Reference.Element.all).Sub_Elements.Insert
+           (Item, Value);
       end if;
 
    end Internal_Set;
-
-   ---------
-   -- Set --
-   ---------
-
-   procedure Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Boolean_Key;
-      Value : Boolean)
-   is
-      Value_Record : Boolean_Data := (Value => Value);
-   begin
-      Internal_Set (Self, Item, Value_Record);
-   end Set;
-
-   ---------
-   -- Set --
-   ---------
-
-   procedure Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Parameter_Direction_Key;
-      Value : Parameter_Direction)
-   is
-      Value_Record : Parameter_Direction_Data := (Value => Value);
-   begin
-      Internal_Set (Self, Item, Value_Record);
-   end Set;
-
-   ---------
-   -- Set --
-   ---------
-
-   procedure Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Integer_Key;
-      Value : Integer)
-   is
-      Value_Record : Integer_Data := (Value => Value);
-   begin
-      Internal_Set (Self, Item, Value_Record);
-   end Set;
-
-   ---------
-   -- Set --
-   ---------
-
-   procedure Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Lifetime_Scope_Key;
-      Value : Lifetime_Scope)
-   is
-      Value_Record : Lifetime_Scope_Data := (Value => Value);
-   begin
-      Internal_Set (Self, Item, Value_Record);
-   end Set;
-
-   ---------
-   -- Set --
-   ---------
-
-   procedure Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Ownership_Key;
-      Value : Ownership)
-   is
-      Value_Record : Ownership_Data := (Value => Value);
-   begin
-      Internal_Set (Self, Item, Value_Record);
-   end Set;
-
-   ---------
-   -- Set --
-   ---------
-
-   procedure Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Signal_Emission_Key;
-      Value : Signal_Emission)
-   is
-      Value_Record : Signal_Emission_Data := (Value => Value);
-   begin
-      Internal_Set (Self, Item, Value_Record);
-   end Set;
-
-   ---------
-   -- Set --
-   ---------
-
-   procedure Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Text_Key;
-      Value : Utf8)
-   is
-      Value_Record : Text_Data := (Length => Value'Length, Value => Value);
-   begin
-      Internal_Set (Self, Item, Value_Record);
-   end Set;
 
    ---------
    -- Set --
@@ -535,6 +303,43 @@ package body Gir_Reader.Elements is
       Internal_Set (Self, Item, Value_Record);
    end Set;
 
+   procedure Set
+     (Self : in out Element; Value : Gir_Reader.Attribute_Maps.Attribute_Map)
+   is
+   begin
+
+      if Self.Is_Empty then
+
+         declare
+            R : Real_Element;
+         begin
+            R.Attributes := Value;
+            Self.Replace_Element (R);
+         end;
+
+      else
+         Real_Element (Self.Reference.Element.all).Attributes := Value;
+      end if;
+
+   end Set;
+
+   procedure Set_Content
+     (Self : in out Element; Value : Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      if Self.Is_Empty then
+
+         declare
+            R : Real_Element;
+         begin
+            R.Content := Value;
+            Self.Replace_Element (R);
+         end;
+
+      else
+         Real_Element (Self.Reference.Element.all).Content := Value;
+      end if;
+
+   end Set_Content;
    ------------
    -- Append --
    ------------
@@ -548,15 +353,16 @@ package body Gir_Reader.Elements is
    begin
       if Self.Is_Empty
         or else
-          not Real_Element (Self.Element).Contains
-                (Gir_Reader.Key_Types.Key (Item))
+          not Real_Element (Self.Element).Sub_Elements.Contains
+                (Gir_Reader.Key_Types.Element_Key (Item))
       then
          List.Append (Value);
          Self.Set (Item, List);
       else
          Gir_Reader.Element_Lists.List
            (Vector_Data
-              (Real_Element (Self.Reference.Element.all).Reference (Item)
+              (Real_Element (Self.Reference.Element.all).Sub_Elements.Reference
+                 (Item)
                  .Element.all)
               .Value)
            .Append (Value);
@@ -567,31 +373,26 @@ package body Gir_Reader.Elements is
    -- Get_Attributes --
    --------------------
 
-   function Get_Attributes (Self : Element) return Element is
+   function Get_Attributes
+     (Self : Element) return Gir_Reader.Attribute_Maps.Attribute_Map is
    begin
-      return Result : Element do
-         if not Self.Is_Empty then
-
-            declare
-               Map : Real_Element renames Real_Element (Self.Element);
-            begin
-               for Iterator in Map.Iterate loop
-
-                  declare
-                     K : Gir_Reader.Key_Types.Key'Class renames
-                       Element_Maps.Key (Iterator);
-                  begin
-                     if K in Gir_Reader.Key_Types.Attribute_Key'Class then
-                        Internal_Set (Result, K, Internal_Get (Self, K));
-                     end if;
-                  end;
-
-               end loop;
-            end;
-
-         end if;
-      end return;
+      if Self.Is_Empty then
+         return Gir_Reader.Attribute_Maps.Empty_Attribute_Map;
+      else
+         return Real_Element (Self.Element).Attributes;
+      end if;
    end Get_Attributes;
+
+   function Get_Content (Self : Element) return Utf8 is
+   begin
+      if Self.Is_Empty then
+         return "";
+      else
+         return
+           Ada.Strings.Unbounded.To_String
+             (Real_Element (Self.Element).Content);
+      end if;
+   end Get_Content;
 
    -----------
    -- Image --
@@ -604,7 +405,7 @@ package body Gir_Reader.Elements is
       if Item.Is_Empty then
          Output.Put ("()");
       else
-         Image (Output, Real_Element (Item.Element));
+         Real_Elements.Image (Output, Real_Element (Item.Element));
       end if;
    end Image;
 

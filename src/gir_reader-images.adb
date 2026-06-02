@@ -44,11 +44,11 @@ package body Gir_Reader.Images is
    ---------------
 
    function To_String
-     (Item              : Utf8;
-      Indent            : Utf8 := "";
-      Indent_First_Line : Boolean := False) return Utf8
+     (Item : Utf8; Indent : Utf8 := ""; Indent_First_Line : Boolean := False)
+      return Utf8
    is
-      Result  : Ada.Strings.Unbounded.Unbounded_String := Ada.Strings.Unbounded.To_Unbounded_String (Item);
+      Result  : Ada.Strings.Unbounded.Unbounded_String :=
+        Ada.Strings.Unbounded.To_Unbounded_String (Item);
       Start   : Positive := 1;
       Index   : Natural := 0;
       Pattern : String := "" & ASCII.LF;
