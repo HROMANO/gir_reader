@@ -546,10 +546,6 @@ package Gir_Reader.Keys is
    --  XML glib namespace.
    Xmlns_Glib : constant Text_Key := Create (tr ("XML glib namespace"));
 
-   --  For most elements:
-   --  Content of the element (i.e. between XML start and end tags).
-   Content : constant Text_Key := Create (tr ("content"));
-
    -----------------------------------------------
    --  List of Element keys found in GIR files. --
    -----------------------------------------------
