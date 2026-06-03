@@ -184,6 +184,12 @@ package body Gir_Reader.Attribute_Maps is
 
             end if;
 
+            if Internal_Attribute_Maps.Next (Index)
+              /= Internal_Attribute_Maps.No_Element
+            then
+               Output.New_Line;
+            end if;
+
          end;
 
       end loop;
