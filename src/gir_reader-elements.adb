@@ -125,21 +125,22 @@ package body Gir_Reader.Elements is
             Output.Increase_Indent (Indent_Size);
 
             for Index in Item.Sub_Elements.Iterate loop
+
                declare
+
                   Key  : Gir_Reader.Key_Types.Element_Key renames
                     Element_Maps.Key (Index);
                   Data : Holder_Content_Root'Class renames
                     Item.Sub_Elements.Element (Key);
+
                begin
+
                   Gir_Reader.Key_Types.Image (Output, Key);
                   Output.Put (": ");
 
                   Image (Output, Vector_Data (Data));
+                  Output.New_Line;
 
-                  if Element_Maps.Next (Index) /= Element_Maps.No_Element then
-                     Output.Put (",");
-                     Output.New_Line;
-                  end if;
                end;
             end loop;
 
@@ -148,7 +149,6 @@ package body Gir_Reader.Elements is
          end if;
 
          Output.Decrease_Indent (Indent_Size);
-         Output.New_Line;
          Output.Put (")");
 
       end Image;
@@ -223,9 +223,9 @@ package body Gir_Reader.Elements is
 
       declare
          The_Element : Real_Element renames Real_Element (Self.Element);
-         begin
-      for Iterator in The_Element.Sub_Elements.Iterate loop
-         Result.Append (Real_Elements.Element_Maps.Key (Iterator));
+      begin
+         for Iterator in The_Element.Sub_Elements.Iterate loop
+            Result.Append (Real_Elements.Element_Maps.Key (Iterator));
          end loop;
       end;
 
@@ -233,56 +233,33 @@ package body Gir_Reader.Elements is
 
    end Get_Sub_Elements_Key_List;
 
-   ------------------
-   -- Internal_Get --
-   ------------------
+   ---------
+   -- Get --
+   ---------
 
-   function Internal_Get
+   function Get
      (Self : Element; Item : Gir_Reader.Key_Types.Element_Key)
-      return Holder_Content_Root'Class
-   is (Real_Element (Self.Element).Sub_Elements (Item))
-   with Inline;
-
-   -----------------
-   -- Get_Or_Else --
-   -----------------
-
-   function Get_Or_Else
-     (Self    : Element;
-      Item    : Gir_Reader.Key_Types.Element_Key;
-      Default : Gir_Reader.Element_Lists.List)
-      return Gir_Reader.Element_Lists.List
-   is (if Self.Contains (Item)
-       then Vector_Data (Internal_Get (Self, Item)).Value
-       else Default);
-
-   ------------------
-   -- Internal_Set --
-   ------------------
-
-   procedure Internal_Set
-     (Self  : in out Element;
-      Item  : Gir_Reader.Key_Types.Element_Key;
-      Value : Holder_Content_Root'Class) is
+      return Gir_Reader.Element_Lists.List is
    begin
-      if Self.Is_Empty then
+      return Result : Gir_Reader.Element_Lists.List do
 
-         declare
-            R : Real_Element;
-         begin
-            R.Sub_Elements.Insert (Item, Value);
-            Self.Replace_Element (R);
-         end;
+         if Self.Contains (Item) then
 
-      elsif Real_Element (Self.Element).Sub_Elements.Contains (Item) then
-         Real_Element (Self.Reference.Element.all).Sub_Elements (Item) :=
-           Value;
-      else
-         Real_Element (Self.Reference.Element.all).Sub_Elements.Insert
-           (Item, Value);
-      end if;
+            --  TODO: why is this declare needed?
+            declare
+               H : Holder_Content_Root'Class :=
+                 Real_Element (Self.Element).Sub_Elements (Item);
+            begin
+               Result := Vector_Data (H).Value;
+            end;
 
-   end Internal_Set;
+         else
+            Result := Gir_Reader.Element_Lists.Empty_List;
+
+         end if;
+
+      end return;
+   end Get;
 
    ---------
    -- Set --
@@ -293,10 +270,33 @@ package body Gir_Reader.Elements is
       Item  : Gir_Reader.Key_Types.Element_Key;
       Value : Gir_Reader.Element_Lists.List)
    is
-      Value_Record : Vector_Data;
+      Value_Record : Vector_Data := (Value => Value);
    begin
-      Value_Record.Value := Value;
-      Internal_Set (Self, Item, Value_Record);
+
+      if Self.Is_Empty then
+
+         declare
+            R : Real_Element;
+         begin
+            R.Sub_Elements.Insert (Item, Value_Record);
+            Self.Replace_Element (R);
+         end;
+
+      elsif Real_Element (Self.Element).Sub_Elements.Contains (Item) then
+
+         --  TODO: why is this declare needed?
+         declare
+            H : Holder_Content_Root'Class := Value_Record;
+         begin
+            Real_Element (Self.Reference.Element.all).Sub_Elements (Item) := H;
+         end;
+
+      else
+         Real_Element (Self.Reference.Element.all).Sub_Elements.Insert
+           (Item, Value_Record);
+
+      end if;
+
    end Set;
 
    ---------
@@ -356,14 +356,18 @@ package body Gir_Reader.Elements is
    is
       List : Gir_Reader.Element_Lists.List;
    begin
+
       if Self.Is_Empty
         or else
           not Real_Element (Self.Element).Sub_Elements.Contains
                 (Gir_Reader.Key_Types.Element_Key (Item))
       then
+
          List.Append (Value);
          Self.Set (Item, List);
+
       else
+
          Gir_Reader.Element_Lists.List
            (Vector_Data
               (Real_Element (Self.Reference.Element.all).Sub_Elements.Reference
@@ -371,7 +375,9 @@ package body Gir_Reader.Elements is
                  .Element.all)
               .Value)
            .Append (Value);
+
       end if;
+
    end Append;
 
    --------------------
@@ -381,22 +387,34 @@ package body Gir_Reader.Elements is
    function Get_Attributes
      (Self : Element) return Gir_Reader.Attribute_Maps.Attribute_Map is
    begin
+
       if Self.Is_Empty then
          return Gir_Reader.Attribute_Maps.Empty_Attribute_Map;
+
       else
          return Real_Element (Self.Element).Attributes;
+
       end if;
+
    end Get_Attributes;
+
+   -----------------
+   -- Get_Content --
+   -----------------
 
    function Get_Content (Self : Element) return Utf8 is
    begin
+
       if Self.Is_Empty then
          return "";
+
       else
          return
            Ada.Strings.Unbounded.To_String
              (Real_Element (Self.Element).Content);
+
       end if;
+
    end Get_Content;
 
    -----------
@@ -407,11 +425,15 @@ package body Gir_Reader.Elements is
      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
       Item   : Element) is
    begin
+
       if Item.Is_Empty then
          Output.Put ("()");
+
       else
          Real_Elements.Image (Output, Real_Element (Item.Element));
+
       end if;
+
    end Image;
 
    ---------
@@ -421,7 +443,7 @@ package body Gir_Reader.Elements is
    function "/"
      (Left : Element; Right : Gir_Reader.Key_Types.Element_Key)
       return Gir_Reader.Element_Lists.List
-   is (Left.Get_Or_Else (Right, Gir_Reader.Element_Lists.Empty_List));
+   is (Left.Get (Right));
 
    ---------
    -- "/" --
@@ -432,7 +454,9 @@ package body Gir_Reader.Elements is
    is
       use type Gir_Reader.Element_Lists.List;
    begin
+
       return Left / Right / 1;
+
    end "/";
 
 end Gir_Reader.Elements;

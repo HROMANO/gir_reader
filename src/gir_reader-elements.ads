@@ -60,16 +60,14 @@ package Gir_Reader.Elements is
    --  @return The requested content.
    function Get_Content (Self : Element) return Utf8;
 
-   --  Get the requested sub-element key of the element or the provided default
-   --  value if Self doesn't contain that key.
+   --  Get the requested sub-element.
    --  @param Self The element.
    --  @param Item A text key.
    --  @param Default Default return value.
-   --  @return The value of the key or the default value.
-   function Get_Or_Else
+   --  @return The value of the key or an empty list.
+   function Get
      (Self    : Element;
-      Item    : Gir_Reader.Key_Types.Element_Key;
-      Default : Gir_Reader.Element_Lists.List)
+      Item    : Gir_Reader.Key_Types.Element_Key)
       return Gir_Reader.Element_Lists.List;
 
    ------------------

@@ -1,12 +1,9 @@
-pragma Ada_2022;
-
 with Ada.Containers.Indefinite_Ordered_Maps;
 
 with Gir_Reader.Images;
 
 package body Gir_Reader.Attribute_Maps is
 
-   use type Gir_Reader.Key_Types.Key;
    use type Gir_Reader.Key_Types.Attribute_Key;
 
    --
@@ -143,17 +140,22 @@ package body Gir_Reader.Attribute_Maps is
    is
       use type Internal_Attribute_Maps.Cursor;
    begin
+
       if Item.Is_Empty then
          Output.Put ("()");
          return;
       end if;
 
       for Index in Item.Iterate loop
+
          declare
+
             Key  : Gir_Reader.Key_Types.Attribute_Key'Class renames
               Internal_Attribute_Maps.Key (Index);
             Data : Holder_Content_Root'Class renames Item.Element (Key);
+
          begin
+
             Gir_Reader.Key_Types.Image (Output, Key);
             Output.Put (": ");
 
@@ -182,13 +184,8 @@ package body Gir_Reader.Attribute_Maps is
 
             end if;
 
-            if Internal_Attribute_Maps.Next (Index)
-              /= Internal_Attribute_Maps.No_Element
-            then
-               Output.Put (",");
-               Output.New_Line;
-            end if;
          end;
+
       end loop;
 
    end Image;
@@ -198,16 +195,12 @@ package body Gir_Reader.Attribute_Maps is
    -------------------------
 
    function Empty_Attribute_Map return Attribute_Map is
-      Empty : Attribute_Map;
-   begin
-      return Empty;
-   end Empty_Attribute_Map;
+      ((Holders.Holder with others => <>));
 
    -----------
    -- Clear --
    -----------
 
-   overriding
    procedure Clear (Self : in out Attribute_Map) is
    begin
       Holders.Holder (Self).Clear;
@@ -217,14 +210,15 @@ package body Gir_Reader.Attribute_Maps is
    -- Is_Empty --
    --------------
 
-   overriding
    function Is_Empty (Self : Attribute_Map) return Boolean is
    begin
+
       if Holders.Holder (Self).Is_Empty then
          return True;
       end if;
 
       return Real_Attribute_Map (Self.Element).Is_Empty;
+
    end Is_Empty;
 
    --------------
@@ -235,11 +229,13 @@ package body Gir_Reader.Attribute_Maps is
      (Self : Attribute_Map; Item : Gir_Reader.Key_Types.Attribute_Key'Class)
       return Boolean is
    begin
+
       if Self.Is_Empty then
          return False;
       end if;
 
       return Real_Attribute_Map (Self.Element).Contains (Item);
+
    end Contains;
 
    ------------------------
@@ -249,6 +245,7 @@ package body Gir_Reader.Attribute_Maps is
    function Get_Attribute_Keys
      (Self : Attribute_Map) return Gir_Reader.Key_Lists.Attribute_Key_List is
    begin
+
       return List : Gir_Reader.Key_Lists.Attribute_Key_List do
          for C in
            Real_Attribute_Map (Self.Constant_Reference.Element.all).Iterate
@@ -258,6 +255,7 @@ package body Gir_Reader.Attribute_Maps is
                  (Internal_Attribute_Maps.Key (C)));
          end loop;
       end return;
+
    end Get_Attribute_Keys;
 
    ------------------
@@ -363,6 +361,7 @@ package body Gir_Reader.Attribute_Maps is
       Item  : Gir_Reader.Key_Types.Attribute_Key'Class;
       Value : Holder_Content_Root'Class) is
    begin
+
       if Self.Is_Empty then
 
          declare
@@ -478,6 +477,10 @@ package body Gir_Reader.Attribute_Maps is
       Internal_Set (Self, Item, Value_Record);
    end Set;
 
+   -----------
+   -- UnSet --
+   -----------
+
    procedure Unset
      (Self : in out Attribute_Map;
       Item : Gir_Reader.Key_Types.Attribute_Key'Class) is
@@ -493,11 +496,15 @@ package body Gir_Reader.Attribute_Maps is
      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
       Item   : Attribute_Map) is
    begin
+
       if Item.Is_Empty then
          Output.Put ("()");
+
       else
          Image (Output, Real_Attribute_Map (Item.Element));
+
       end if;
+
    end Image;
 
 end Gir_Reader.Attribute_Maps;
